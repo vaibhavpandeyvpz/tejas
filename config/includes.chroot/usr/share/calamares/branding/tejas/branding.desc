@@ -1,0 +1,15 @@
+componentName: Tejas OS Installer
+welcomeStyleCalamares: true
+
+strings:
+  productName: Tejas OS
+  shortProductName: Tejas
+  version: "1.0"
+  shortVersion: "1.0"
+  welcomeMessage: "Welcome to Tejas OS"
+  productUrl: "https://github.com/vaibhavpandeyvpz/tejas"
+
+images:
+  productLogo: "logo.png"
+  productIcon: "icon.png"
+  productWelcome: "welcome.png"

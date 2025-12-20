@@ -1,0 +1,21 @@
+#!/bin/bash
+set -e
+
+# Already installed system? Exit.
+if [ ! -e /run/live/medium ] && ! grep -q "boot=live" /proc/cmdline; then
+    exit 0
+fi
+
+# Only run once per session
+FLAG="$HOME/.config/tejas-installer-ran"
+if [ -f "$FLAG" ]; then
+    exit 0
+fi
+
+touch "$FLAG"
+
+# Small delay so XFCE finishes loading
+sleep 5
+
+# Launch Calamares
+exec pkexec calamares

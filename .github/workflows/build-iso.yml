@@ -1,0 +1,36 @@
+name: Build Tejas Linux ISO
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/lib/android
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y live-build debootstrap squashfs-tools xorriso grub-pc-bin grub-efi-amd64-bin isolinux syslinux-utils
+
+      - name: Configure live-build
+        run: |
+          lb config --distribution jammy --archive-areas "main restricted universe multiverse" --binary-images iso-hybri --debian-installer live
+
+      - name: Build ISO
+        run: sudo lb build
+
+      - name: Upload ISO
+        uses: actions/upload-artifact@v4
+        with:
+          name: tejas-linux-iso
+          path: "*.iso"
