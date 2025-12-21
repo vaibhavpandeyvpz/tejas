@@ -23,3 +23,13 @@ dosfstools
 ntfs-3g
 btrfs-progs
 e2fsprogs
+
+# Secure Boot
+shim-signed
+grub-efi-amd64-signed
+linux-image-generic
+
+# Secure Boot DKMS support
+mokutil
+openssl
+dkms

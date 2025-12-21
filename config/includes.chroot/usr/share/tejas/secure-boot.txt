@@ -1,0 +1,3 @@
+If Secure Boot is enabled and you install NVIDIA or Wi-Fi drivers, you will be asked to enroll a key once.
+
+This is normal and required for Secure Boot.

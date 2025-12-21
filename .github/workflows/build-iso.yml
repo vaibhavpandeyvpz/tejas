@@ -36,10 +36,13 @@ jobs:
           sudo apt install -y \
             debootstrap \
             grub-efi-amd64-bin \
+            grub-efi-amd64-signed \
             grub-pc-bin \
             live-build \
             qemu-utils \
+            shim-signed \
             squashfs-tools \
+            syslinux-utils \
             xorriso
           sudo apt clean
 
