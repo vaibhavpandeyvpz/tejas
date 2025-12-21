@@ -70,6 +70,7 @@ jobs:
           PROFILE: ${{ matrix.profile }}
         run: |
           sudo PROFILE=${PROFILE} iso/build.sh
+          sudo chown -R $USER:$USER iso/out
 
       # ----------------------------
       # Rename + checksum
