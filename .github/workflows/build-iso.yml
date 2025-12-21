@@ -76,7 +76,8 @@ jobs:
 
       - name: Debug live-build isohybrid
         run: |
-          grep ISOHYBRID -n /usr/lib/live/build/binary.sh || true
+          dpkg -L live-build | grep binary.sh
+          grep -n isohybrid $(dpkg -L live-build | grep binary.sh)
 
       # 🧹 Clean previous build
       - name: Clean live-build
