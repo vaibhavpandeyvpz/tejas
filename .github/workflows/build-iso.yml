@@ -44,7 +44,6 @@ jobs:
             squashfs-tools \
             syslinux-utils \
             xorriso
-          sudo apt clean
 
       - name: Configure live-build
         run: |
