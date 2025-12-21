@@ -238,7 +238,6 @@ sudo apt install -y \
   shim-signed \
   casper \
   calamares \
-  calamares-settings-ubuntu \
   rsync
 ```
 
