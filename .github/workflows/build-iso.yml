@@ -37,9 +37,9 @@ jobs:
         run: |
           lb config \
             --distribution noble \
-            --archive-areas "main restricted universe multiverse" \
+            --archive-areas "main universe multiverse restricted" \
             --binary-images iso-hybrid \
-            --debian-installer live \
+            --debian-installer false \
             --bootappend-live "boot=live components quiet splash" \
             --apt-recommends true
 
