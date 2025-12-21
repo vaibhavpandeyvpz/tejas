@@ -38,6 +38,7 @@ jobs:
             grub-efi-amd64-bin \
             grub-efi-amd64-signed \
             grub-pc-bin \
+            isolinux \
             live-build \
             qemu-utils \
             shim-signed \
