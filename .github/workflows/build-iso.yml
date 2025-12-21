@@ -71,6 +71,7 @@ jobs:
             rsync \
             shim-signed \
             squashfs-tools \
+            syslinux-utils \
             xorriso
 
       - name: Sanity check isohybrid
