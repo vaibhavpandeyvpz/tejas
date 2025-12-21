@@ -1,3 +1,4 @@
+# System utils
 build-essential
 git
 curl
@@ -6,3 +7,7 @@ man-db
 manpages
 info
 pkg-config
+
+# Userland apps
+code
+sublime-text
