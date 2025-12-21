@@ -9,25 +9,48 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
       - name: Free disk space
         run: |
           sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/lib/android
+          sudo apt clean
 
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y live-build debootstrap squashfs-tools xorriso grub-pc-bin grub-efi-amd64-bin isolinux syslinux-utils
+          sudo apt install -y \
+            live-build \
+            debootstrap \
+            squashfs-tools \
+            xorriso \
+            grub-pc-bin \
+            grub-efi-amd64-bin \
+            isolinux \
+            syslinux-utils \
+            qemu-utils
+          sudo apt clean
 
       - name: Configure live-build
         run: |
-          lb config --distribution jammy --archive-areas "main restricted universe multiverse" --binary-images iso-hybri --debian-installer live
+          lb config \
+            --distribution noble \
+            --archive-areas "main restricted universe multiverse" \
+            --binary-images iso-hybrid \
+            --debian-installer live \
+            --bootappend-live "boot=live components quiet splash" \
+            --apt-recommends true
 
       - name: Build ISO
         run: sudo lb build
+
+      - name: Rename ISO
+        run: |
+          mkdir -p dist
+          ISO=$(ls *.iso | head -n1)
+          mv "$ISO" dist/tejas-os-amd64.iso
 
       - name: Upload ISO
         uses: actions/upload-artifact@v4
