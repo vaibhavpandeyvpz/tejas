@@ -46,29 +46,42 @@ jobs:
           VERSION="${DATE}-${SHORT_SHA}"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
+      # 💾 Free disk space
       - name: Free disk space
         run: |
           sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/lib/android
           sudo apt clean
 
+      # 📦 Dependencies
       - name: Install dependencies
         run: |
           sudo apt update
           sudo apt install -y \
             debootstrap \
+            gnupg \
             grub-efi-amd64-bin \
             grub-efi-amd64-signed \
             grub-pc-bin \
             live-build \
             qemu-utils \
+            rsync \
             shim-signed \
             squashfs-tools \
-            xorriso \
-            gnupg
+            xorriso
 
+      # 🧹 Clean previous build
+      - name: Clean live-build
+        run: lb clean --purge
+
+      # 🎯 Apply profile (SUPPORTED METHOD)
+      - name: Apply profile
+        run: |
+          echo "Applying profile: ${{ matrix.profile }}"
+          rsync -a profiles/${{ matrix.profile }}/ config/
+
+      # ⚙️ Configure live-build
       - name: Configure live-build
         run: |
-          lb clean --purge
           lb config \
             --apt-recommends true \
             --archive-areas "main universe multiverse restricted" \
@@ -77,13 +90,13 @@ jobs:
             --binary-images iso \
             --compression zstd \
             --debian-installer false \
-            --distribution ${{ matrix.distribution }} \
-            --profile ${{ matrix.profile }}
+            --distribution ${{ matrix.distribution }}
 
+      # 🏗️ Build ISO
       - name: Build ISO
         run: sudo lb build
 
-      # 📦 Rename with version
+      # 📦 Rename ISO
       - name: Rename ISO
         run: |
           mkdir -p dist
@@ -96,10 +109,8 @@ jobs:
       - name: Import GPG key
         run: |
           echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import
-        env:
-          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
 
-      # 🔑 SHA256 + GPG sign
+      # 🔑 SHA256 + GPG signing
       - name: Generate checksums and signatures
         run: |
           cd dist

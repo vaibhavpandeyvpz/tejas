@@ -18,24 +18,25 @@ Tejas is built and maintained as a **clean Ubuntu derivative**, without modifyin
 
 - **XFCE desktop** (lightweight, responsive)
 - **Calamares installer**
-- **Secure Boot support** (amd64)
-- **Two flavours**
-  - **User** – smaller, clean, no docs/manpages
-  - **Developer** – includes man pages, headers, and dev tools
+- **Secure Boot support (amd64)**
+- **Two editions**
+  - **User** – minimal system, smaller ISO
+  - **Developer** – includes documentation, headers, and developer tools
+
 - **English (US / UK) + Indian language support**
-- **Signed ISOs with SHA256 + GPG verification**
+- **Signed ISOs** with SHA256 + GPG signatures
 - **Reproducible builds** via GitHub Actions
 
 ---
 
-## 📦 Editions (Flavours)
+## 📦 Editions
 
-| Flavour       | Target users            | Notes                                        |
+| Edition       | Target users            | Notes                                        |
 | ------------- | ----------------------- | -------------------------------------------- |
-| **User**      | General users           | Smaller ISO, no docs/man pages               |
+| **User**      | General users           | Minimal, smaller ISO                         |
 | **Developer** | Developers, power users | Includes man pages, headers, debugging tools |
 
-Both flavours share:
+Both editions share:
 
 - Same base system
 - Same installer
@@ -46,14 +47,24 @@ Both flavours share:
 
 ## 🏗️ Build locally
 
-You must build on **Ubuntu**.
+You must build on **Ubuntu** (22.04 or newer recommended).
 
 ### 1️⃣ Install dependencies
 
 ```bash
 sudo apt update
-sudo apt install -y live-build debootstrap squashfs-tools xorriso
+sudo apt install -y \
+  live-build \
+  debootstrap \
+  squashfs-tools \
+  xorriso \
+  grub-efi-amd64-bin \
+  grub-efi-amd64-signed \
+  shim-signed \
+  rsync
 ```
+
+---
 
 ### 2️⃣ Clone the repository
 
@@ -62,21 +73,36 @@ git clone https://github.com/vaibhavpandeyvpz/tejas-linux.git
 cd tejas-linux
 ```
 
-### 3️⃣ Configure build (choose one)
+---
 
-**User flavour**
+### 3️⃣ Select an edition (profile)
+
+Tejas uses **directory-based profiles** (this is the only supported method in Ubuntu live-build).
+
+Available profiles:
+
+```
+profiles/user/
+profiles/developer/
+```
+
+Apply a profile by copying it into `config/`.
+
+#### **User edition**
 
 ```bash
 lb clean --purge
-lb config --distribution noble --profiles user
+rsync -a profiles/user/ config/
+lb config --distribution noble
 sudo lb build
 ```
 
-**Developer flavour**
+#### **Developer edition**
 
 ```bash
 lb clean --purge
-lb config --distribution noble --profiles developer
+rsync -a profiles/developer/ config/
+lb config --distribution noble
 sudo lb build
 ```
 
@@ -86,7 +112,7 @@ The ISO will be generated in the project root.
 
 ## 🤖 CI builds (GitHub Actions)
 
-Tejas Linux ISOs are built automatically using GitHub Actions.
+Tejas Linux ISOs are built automatically using **GitHub Actions**.
 
 Each CI run produces:
 
@@ -94,31 +120,41 @@ Each CI run produces:
 - `.sha256` checksum
 - `.sig` GPG signature
 
-Artifacts are named like:
+Artifact naming format:
 
 ```
-tejas-linux-noble-user-YYYY.MM.DD-g<sha>-amd64.iso
+tejas-linux-<ubuntu>-<edition>-YYYY.MM.DD-<git-sha>-amd64.iso
+```
+
+Example:
+
+```
+tejas-linux-noble-developer-2025.12.21-a1b2c3d-amd64.iso
 ```
 
 ---
 
 ## 🔐 Verifying downloads
 
-### 1️⃣ Import Tejas Linux public key
+### 1️⃣ Import the Tejas Linux public key
 
 ```bash
 gpg --import tejas-linux-public.key
 ```
 
-(or fetch from keyserver if published)
+(Or fetch from a keyserver if published.)
 
-### 2️⃣ Verify GPG signature
+---
+
+### 2️⃣ Verify the GPG signature
 
 ```bash
 gpg --verify tejas-linux.iso.sig tejas-linux.iso
 ```
 
-### 3️⃣ Verify checksum
+---
+
+### 3️⃣ Verify the checksum
 
 ```bash
 sha256sum -c tejas-linux.iso.sha256
@@ -128,47 +164,56 @@ Only use the ISO if **both checks succeed**.
 
 ---
 
-## 💿 Writing ISO to USB
+## 💿 Using the ISO
 
-Recommended methods:
+Tejas Linux produces a **pure ISO (non-hybrid)** image.
 
-- **Linux**
+### Recommended usage
 
-  ```bash
-  sudo dd if=tejas-linux.iso of=/dev/sdX bs=4M status=progress oflag=sync
-  ```
+- VirtualBox / VMware
+- Optical media
+- UEFI boot via firmware ISO selection
+- Ventoy (recommended for USB)
 
-- **Windows**
-  - Rufus (DD mode)
-  - Ventoy
+### ⚠️ USB note
 
-- **macOS**
+Because the ISO is **not hybrid**, raw `dd`-to-USB may not boot on all systems.
 
-  ```bash
-  sudo dd if=tejas-linux.iso of=/dev/diskN bs=4m
-  ```
+If creating a USB installer, use:
+
+- **Ventoy**
+- **Rufus (ISO mode)**
 
 ---
 
 ## 📁 Repository structure
 
 ```text
-config/
-├── package-lists/     # Base, user, developer packages
-├── hooks/             # Build-time hooks (locales, stripping, branding)
-├── includes.chroot/   # Files copied into live system
-├── profiles/          # User / Developer profiles
-.github/workflows/     # CI pipelines
+profiles/
+├── user/
+│   ├── package-lists/
+│   ├── includes.chroot/
+│   └── hooks/
+├── developer/
+│   ├── package-lists/
+│   ├── includes.chroot/
+│   └── hooks/
+
+config/                 # live-build working config (generated)
+.github/workflows/      # CI pipelines
 ```
+
+> `profiles/` contain **only differences** between editions.
+> `config/` is populated during local or CI builds.
 
 ---
 
 ## 🔐 Secure Boot & drivers
 
 - Tejas Linux supports **Secure Boot on amd64**
-- NVIDIA and Wi-Fi drivers use **DKMS + MOK enrollment**
-- Users may be prompted **once** to enroll a key when installing proprietary drivers
-- This is expected and documented behavior
+- Proprietary drivers (e.g. NVIDIA, Wi-Fi) use **DKMS + MOK**
+- Users may be prompted **once** to enroll a key when installing such drivers
+- This is expected, standard Secure Boot behavior
 
 ---
 
@@ -176,9 +221,9 @@ config/
 
 Tejas Linux is licensed under the **GNU General Public License v3.0 (GPL-3.0)**.
 
-- All Tejas-specific build scripts, configuration, and tooling in this repository are licensed under **GPL-3.0**, as described in the `LICENSE` file.
-- Tejas Linux redistributes unmodified Ubuntu packages. These packages remain under their respective upstream licenses.
-- Trademarks, logos, and brand names belong to their respective owners.
+- All Tejas-specific build scripts, configuration, and tooling in this repository are licensed under **GPL-3.0**, as described in the `LICENSE` file
+- Tejas Linux redistributes **unmodified Ubuntu packages**, which remain under their respective upstream licenses
+- Trademarks, logos, and brand names belong to their respective owners
 
 Tejas Linux is **not affiliated with or endorsed by Canonical**.
 
@@ -201,15 +246,15 @@ Please open an issue before large changes.
 
 Tejas Linux is under **active development**.
 
-Current focus:
+Current focus areas:
 
 - Stability
 - Hardware compatibility
-- Clean user experience
+- Clean, predictable user experience
 
 ---
 
 ## 🔗 Links
 
-- GitHub Issues: [https://github.com/](https://github.com/vaibhavpandeyvpz/tejas/issues)
-- Releases: [https://github.com/](https://github.com/vaibhavpandeyvpz/tejas/releases)
+- Issues: [https://github.com/vaibhavpandeyvpz/tejas/issues](https://github.com/vaibhavpandeyvpz/tejas/issues)
+- Releases: [https://github.com/vaibhavpandeyvpz/tejas/releases](https://github.com/vaibhavpandeyvpz/tejas/releases)
