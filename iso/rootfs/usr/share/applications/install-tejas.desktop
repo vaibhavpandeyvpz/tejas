@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Install Tejas Linux
+Exec=pkexec calamares
+Icon=system-installer
+Terminal=false
+Categories=System;

@@ -1,0 +1,9 @@
+# User edition is intentionally minimal
+
+# Remove docs & manpages
+man-db-
+manpages-
+info-
+
+# No build tools
+build-essential-

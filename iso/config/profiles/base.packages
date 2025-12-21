@@ -1,0 +1,16 @@
+ubuntu-standard
+casper
+linux-generic
+network-manager
+xfce4
+lightdm
+
+# Installer
+calamares
+calamares-settings-ubuntu
+rsync
+os-prober
+
+# Secure Boot runtime
+grub-efi-amd64-signed
+shim-signed

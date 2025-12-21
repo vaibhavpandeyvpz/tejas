@@ -1,158 +1,144 @@
-# Security Policy — Tejas Linux
+# Security Policy
 
-This document describes the security model, trust chain, and vulnerability
-reporting process for **Tejas Linux**.
+## 🛡️ Reporting Security Issues
 
----
+The Tejas Linux project takes security issues seriously.
 
-## 🔐 Trust & Release Integrity
+If you believe you have found a **security vulnerability** in Tejas Linux, please **do not open a public GitHub issue**.
 
-Tejas Linux publishes **cryptographically verifiable releases**.
-
-Each official ISO release includes:
-
-- A **SHA256 checksum** (`.sha256`)
-- A **detached GPG signature** (`.sig`)
-- A **signed Secure Boot chain** (amd64)
-
-Users are strongly encouraged to verify downloads before installation.
+Instead, report it responsibly using one of the methods below.
 
 ---
 
-## 🔑 GPG Release Signing
+## 📬 How to Report
 
-All official Tejas Linux releases are signed with the **Tejas Linux Release Key**.
+### Preferred method
 
-### Verification steps
-
-```bash
-gpg --import tejas-linux-public.key
-gpg --verify tejas-linux.iso.sig tejas-linux.iso
-sha256sum -c tejas-linux.iso.sha256
-```
-
-Only releases that pass **both** GPG verification and checksum validation
-should be trusted.
-
----
-
-## 🔐 Secure Boot (amd64)
-
-Tejas Linux supports **UEFI Secure Boot on amd64 systems**.
-
-The Secure Boot chain is:
-
-```
-UEFI firmware
- → shim (Microsoft-signed)
- → GRUB (signed)
- → Linux kernel (signed)
-```
-
-No unsigned bootloaders or kernels are shipped in official amd64 ISOs.
-
----
-
-## 🔧 Secure Boot & Third-Party Drivers (DKMS)
-
-When Secure Boot is enabled:
-
-- Proprietary or out-of-tree drivers (e.g. NVIDIA, Broadcom Wi-Fi)
-  are built locally using **DKMS**
-- These modules are signed using a **Machine Owner Key (MOK)**
-- Users may be prompted once to enroll a key during reboot
-
-This behavior is **expected and required** for Secure Boot compatibility.
-
-Tejas Linux does **not** bypass Secure Boot, disable kernel lockdown,
-or auto-enroll keys without user consent.
-
----
-
-## 🧩 Supported Architectures
-
-| Architecture   | Status                  |
-| -------------- | ----------------------- |
-| amd64 (x86_64) | Fully supported         |
-| arm64          | Not currently supported |
-
-Security guarantees apply only to **officially supported architectures**.
-
----
-
-## 🚨 Reporting Security Issues
-
-If you discover a security vulnerability in:
-
-- Tejas build scripts
-- Installer configuration
-- Boot process
-- Release infrastructure
-
-Please report it **privately**.
-
-### 📧 Contact
-
-Email:
+Send a detailed report via **email** to:
 
 ```
 tejas.linux@vaibhavpandey.com
 ```
 
-(or open a private GitHub security advisory if enabled)
+Please include:
 
-Please **do not open public issues** for security vulnerabilities.
-
----
-
-## ⏱️ Response Policy
-
-- Acknowledgement: **within 72 hours**
-- Initial assessment: **within 7 days**
-- Fix & disclosure: coordinated based on severity
-
-Critical issues affecting release integrity or boot security
-are prioritized.
+- A clear description of the vulnerability
+- Steps to reproduce (if applicable)
+- Affected versions / editions (User / Developer)
+- Any relevant logs, screenshots, or proof-of-concept code
 
 ---
 
-## 🔍 Scope
+### Optional: Encrypted reports (recommended)
 
-This security policy applies to:
+You may encrypt your report using the **Tejas Linux GPG release key**.
 
-- Tejas Linux build system
-- Official ISO images
-- Release signing process
-- Secure Boot configuration
+#### 🔑 GPG key details
 
-It does **not** cover:
+- **Key ID:** `A3F982C55AD5DA0B`
+- **Key type:** RSA 4096
 
-- Upstream Ubuntu package vulnerabilities
-- Third-party software bugs
-- Hardware firmware issues
+The public key is available in this repository:
 
-Upstream vulnerabilities should be reported to the appropriate project.
+```
+tejas-linux-public.key
+```
 
----
+Or from Ubuntu keyservers:
 
-## 📜 Responsible Disclosure
+```bash
+gpg --keyserver keyserver.ubuntu.com --recv-keys A3F982C55AD5DA0B
+```
 
-Tejas Linux follows responsible disclosure practices.
+To encrypt your report:
 
-We appreciate researchers who:
-
-- Provide clear reproduction steps
-- Allow time for fixes
-- Avoid public disclosure before mitigation
+```bash
+gpg --encrypt --armor -r A3F982C55AD5DA0B report.txt
+```
 
 ---
 
-## 🛡️ Disclaimer
+## ⏱️ Response Timeline
 
-Tejas Linux is provided **as-is**, without warranty.
-Security guarantees apply only to official releases
-built and signed by the Tejas Linux project.
+We aim to:
+
+- **Acknowledge** receipt within **72 hours**
+- **Assess and validate** the issue as quickly as possible
+- **Coordinate a fix** and release timeline responsibly
+
+Critical vulnerabilities may result in **out-of-band releases**.
 
 ---
 
-Last updated: 2025-12-21
+## 🔐 Supported Versions
+
+Security updates apply to:
+
+- The **latest stable release** of Tejas Linux
+- Actively developed pre-release versions (if applicable)
+
+Older releases may not receive fixes unless the issue is critical.
+
+---
+
+## 🔏 Release Integrity & Trust Model
+
+Tejas Linux uses a **CI-based, cryptographically verifiable release process**:
+
+- ISOs are built in **GitHub Actions**
+- Artifacts are signed using the **Tejas Linux GPG release key**
+- SHA256 checksums are published alongside releases
+- Users are encouraged to verify **both signature and checksum**
+
+Refer to `README.md` for detailed verification instructions.
+
+---
+
+## 🧩 Secure Boot & Third-Party Software
+
+- Tejas Linux uses **Ubuntu’s Secure Boot chain**
+  - Microsoft-signed shim
+  - Canonical-signed GRUB
+  - Canonical-signed kernel
+
+- Proprietary or DKMS-based drivers (e.g. NVIDIA) may require **MOK enrollment**
+  - This behavior is expected and documented
+
+Security issues related solely to **upstream Ubuntu packages** should generally be reported upstream as well.
+
+---
+
+## 🚫 Scope Exclusions
+
+The following are **out of scope** for security reports:
+
+- Issues in unsupported or heavily modified systems
+- Vulnerabilities introduced by third-party software installed by users
+- Denial-of-service caused by intentional misuse
+- Social engineering attacks
+
+If unsure, **report anyway** — we will triage responsibly.
+
+---
+
+## 🧠 Responsible Disclosure
+
+We ask that reporters:
+
+- Avoid public disclosure until a fix is available
+- Give reasonable time for investigation and remediation
+- Coordinate disclosure if the issue affects upstream Ubuntu or third parties
+
+We are committed to **responsible, transparent handling** of security issues.
+
+---
+
+## 🙏 Acknowledgements
+
+We appreciate the efforts of security researchers and community members who help keep Tejas Linux safe.
+
+Contributors who responsibly disclose security issues may be acknowledged in release notes (with consent).
+
+---
+
+**Thank you for helping keep Tejas Linux secure.**
