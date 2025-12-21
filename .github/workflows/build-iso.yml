@@ -91,11 +91,10 @@ jobs:
             --archive-areas "main universe multiverse restricted" \
             --bootloader grub-efi \
             --bootappend-live "boot=live components quiet splash" \
-            --binary-images iso \
+            --binary-images iso-hybrid \
             --compression zstd \
             --debian-installer false \
-            --distribution ${{ matrix.distribution }} \
-            --uefi-secure-boot auto
+            --distribution ${{ matrix.distribution }}
 
       # 🏗️ Build ISO
       - name: Build ISO
