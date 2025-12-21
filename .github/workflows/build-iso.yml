@@ -76,7 +76,9 @@ jobs:
 
       - name: Fix isohybrid path for live-build
         run: |
-          sudo ln -sf $(which isohybrid) /usr/sbin/isohybrid
+          ISOHYBRID=$(which isohybrid)
+          sudo ln -sf "$ISOHYBRID" /sbin/isohybrid
+          sudo ln -sf "$ISOHYBRID" /usr/sbin/isohybrid
 
       # 🧹 Clean previous build
       - name: Clean live-build
