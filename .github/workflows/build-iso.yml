@@ -94,7 +94,8 @@ jobs:
             --binary-images iso \
             --compression zstd \
             --debian-installer false \
-            --distribution ${{ matrix.distribution }}
+            --distribution ${{ matrix.distribution }} \
+            --uefi-secure-boot auto
 
       # 🏗️ Build ISO
       - name: Build ISO
