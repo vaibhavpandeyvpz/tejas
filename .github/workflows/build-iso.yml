@@ -76,10 +76,9 @@ jobs:
             --bootappend-live "boot=live components quiet splash" \
             --binary-images iso \
             --compression zstd \
-            --compression-level 19 \
             --debian-installer false \
             --distribution ${{ matrix.distribution }} \
-            --profiles ${{ matrix.profile }}
+            --profile ${{ matrix.profile }}
 
       - name: Build ISO
         run: sudo lb build

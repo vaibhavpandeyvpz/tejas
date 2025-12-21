@@ -210,5 +210,5 @@ Current focus:
 
 ## 🔗 Links
 
-* GitHub Issues: [https://github.com/](https://github.com/)vaibhavpandeyvpz/tejas/issues
-* Releases: [https://github.com/](https://github.com/)vaibhavpandeyvpz/tejas/releases
+* GitHub Issues: [https://github.com/](https://github.com/vaibhavpandeyvpz/tejas/issues)
+* Releases: [https://github.com/](https://github.com/vaibhavpandeyvpz/tejas/releases)
