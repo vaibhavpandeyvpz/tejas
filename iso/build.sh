@@ -143,19 +143,8 @@ fi
 # -----------------------------
 echo "[13/13] Create ISO"
 mkdir -p "$OUT"
-
-xorriso -as mkisofs \
-  -r \
-  -V "TEJAS_LINUX" \
+grub-mkrescue \
   -o "$OUT/tejas-linux-$VERSION-$PROFILE-amd64.iso" \
-  -J -joliet-long -l \
-  -b boot/grub/i386-pc/eltorito.img \
-  -no-emul-boot \
-  -boot-load-size 4 \
-  -boot-info-table \
-  -eltorito-alt-boot \
-  -e EFI/BOOT/BOOTX64.EFI \
-  -no-emul-boot \
   "$IMAGE"
 
 echo "[DONE] ISO created:"
