@@ -1,3 +1,4 @@
 #!/bin/bash
 set -e
+
 echo "Welcome to Tejas Linux" > /etc/issue
