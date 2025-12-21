@@ -1,22 +1,28 @@
-ubuntu-standard
+# Core
 casper
+lightdm
 linux-generic
 network-manager
+ubuntu-standard
 xfce4
 xfce4-terminal
-lightdm
 
 # Installer
 calamares
-rsync
 os-prober
+rsync
 
-# Secure Boot runtime
+# Secure Boot
 grub-efi-amd64-signed
 shim-signed
 
+# System utils
+apt-transport-https
+curl
+gpg
+wget
+
 # Userland apps
-chromium-browser
 libreoffice
 sylpheed
 vlc

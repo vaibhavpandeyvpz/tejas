@@ -1,0 +1,64 @@
+#!/bin/bash
+set -e
+
+PROFILE=$(cat /etc/tejas-profile 2>/dev/null || echo user)
+
+# Developer edition only
+if [ "$PROFILE" != "developer" ]; then
+  exit 0
+fi
+
+echo "[dev-env] Installing pyenv, rbenv, nvm"
+
+# Base dependencies
+apt update
+apt install -y \
+  git curl build-essential \
+  libssl-dev zlib1g-dev libbz2-dev \
+  libreadline-dev libsqlite3-dev \
+  libncursesw5-dev xz-utils tk-dev \
+  libxml2-dev libxmlsec1-dev libffi-dev \
+  libyaml-dev
+
+# Install directories
+install -d -m 0755 /opt/pyenv /opt/rbenv /opt/nvm
+
+# ---- pyenv ----
+if [ ! -d /opt/pyenv/.git ]; then
+  git clone https://github.com/pyenv/pyenv.git /opt/pyenv
+fi
+
+# ---- rbenv ----
+if [ ! -d /opt/rbenv/.git ]; then
+  git clone https://github.com/rbenv/rbenv.git /opt/rbenv
+  git clone https://github.com/rbenv/ruby-build.git /opt/rbenv/plugins/ruby-build
+fi
+
+# ---- nvm ----
+if [ ! -f /opt/nvm/nvm.sh ]; then
+  curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh \
+    | NVM_DIR=/opt/nvm bash
+fi
+
+# ---- profile integration ----
+cat <<'EOF' > /etc/profile.d/tejas-dev-env.sh
+# pyenv
+export PYENV_ROOT="/opt/pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+if command -v pyenv >/dev/null 2>&1; then
+  eval "$(pyenv init -)"
+fi
+
+# rbenv
+export RBENV_ROOT="/opt/rbenv"
+export PATH="$RBENV_ROOT/bin:$PATH"
+if command -v rbenv >/dev/null 2>&1; then
+  eval "$(rbenv init -)"
+fi
+
+# nvm
+export NVM_DIR="/opt/nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+EOF
+
+chmod 644 /etc/profile.d/tejas-dev-env.sh
