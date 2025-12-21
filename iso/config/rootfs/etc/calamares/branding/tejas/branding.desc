@@ -1,7 +1,11 @@
-componentName: Tejas Linux Installer
-welcomeStyleCalamares: true
-windowTitle: Tejas Linux Installer
-productName: Tejas Linux (${PROFILE})
-shortProductName: Tejas
-version: 1.0
-shortProductName: Tejas
+componentName: tejas
+branding:
+  name: "Tejas Linux"
+  version: "24.04"
+  welcomeStyleCalamares: true
+  strings:
+    productName: "Tejas Linux"
+    shortProductName: "Tejas"
+    version: "24.04"
+    shortVersion: "24.04"
+    versionedName: "Tejas Linux 24.04"

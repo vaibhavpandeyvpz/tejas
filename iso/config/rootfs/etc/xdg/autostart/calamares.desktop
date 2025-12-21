@@ -1,5 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=Install Tejas Linux
-Exec=pkexec calamares
-X-GNOME-Autostart-enabled=true
