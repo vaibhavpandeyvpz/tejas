@@ -1,11 +1,58 @@
 componentName: tejas
-branding:
-  name: "Tejas Linux"
-  version: "24.04"
-  welcomeStyleCalamares: true
-  strings:
-    productName: "Tejas Linux"
-    shortProductName: "Tejas"
-    version: "24.04"
-    shortVersion: "24.04"
-    versionedName: "Tejas Linux 24.04"
+
+### WELCOME / OVERALL WORDING
+
+# Use Calamares-style welcome page
+welcomeStyleCalamares: true
+
+# No welcome image scaling (we use text-only)
+welcomeExpandingLogo: false
+
+
+### WINDOW CONFIGURATION
+
+windowExpanding: normal
+windowSize: 800px,520px
+windowPlacement: center
+
+
+### PANELS CONFIGURATION
+
+sidebar: widget
+navigation: widget
+
+
+### STRINGS
+
+strings:
+    productName:        "Tejas Linux"
+    shortProductName:   "Tejas"
+    version:            "24.04"
+    shortVersion:       "24.04"
+    versionedName:      "Tejas Linux 24.04"
+    shortVersionedName: "Tejas 24.04"
+    bootloaderEntryName:"Tejas Linux"
+
+    productUrl:         "https://github.com/vaibhavpandeyvpz/tejas"
+    supportUrl:         "https://github.com/vaibhavpandeyvpz/tejas/issues"
+    knownIssuesUrl:     "https://github.com/vaibhavpandeyvpz/tejas/issues"
+    releaseNotesUrl:    "https://github.com/vaibhavpandeyvpz/tejas/releases"
+    donateUrl:          ""
+
+
+### IMAGES
+# Intentionally empty — text-only branding
+
+
+### SLIDESHOW
+
+# Use the text-only QML slideshow
+slideshow: "show.qml"
+slideshowAPI: 2
+
+
+### LOG UPLOADS
+
+# Disable pastebin uploads
+uploadServer:
+    type: "none"
