@@ -27,12 +27,12 @@ sudo mount --bind /proc $ROOTFS/proc
 sudo mount --bind /sys  $ROOTFS/sys
 
 echo "[4/11] Install base packages"
-xargs -a iso/config/profiles/base.packages \
-  sudo chroot $ROOTFS apt install -y
+sudo chroot $ROOTFS apt update
+PKGS=$(grep -Ev '^\s*#|^\s*$' iso/config/profiles/base.packages)
+sudo chroot $ROOTFS apt install -y $PKGS
 
-echo "[5/11] Apply $PROFILE packages"
-xargs -a iso/config/profiles/$PROFILE.packages \
-  sudo chroot $ROOTFS apt install -y
+echo "[5/11] Install $PROFILE packages"
+PKGS=$(grep -Ev '^\s*#|^\s*$' iso/config/profiles/$PROFILE.packages)
 
 echo "[6/11] Generate filesystem manifest"
 sudo chroot $ROOTFS dpkg-query -W \
