@@ -14,3 +14,9 @@ os-prober
 # Secure Boot runtime
 grub-efi-amd64-signed
 shim-signed
+
+# Userland apps
+chromium-browser
+libreoffice
+sylpheed
+vlc
