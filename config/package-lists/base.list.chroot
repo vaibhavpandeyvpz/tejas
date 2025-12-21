@@ -24,9 +24,6 @@ ntfs-3g
 btrfs-progs
 e2fsprogs
 
-# ISO
-syslinux-utils
-
 # Secure Boot
 shim-signed
 grub-efi-amd64-signed
