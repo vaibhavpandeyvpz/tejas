@@ -2,3 +2,6 @@
 build-essential
 git
 pkg-config
+
+# Userland apps
+firefox
