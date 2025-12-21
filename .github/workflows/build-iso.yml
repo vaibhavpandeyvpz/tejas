@@ -86,6 +86,8 @@ jobs:
       # ⚙️ Configure live-build
       - name: Configure live-build
         run: |
+          lb clean --purge
+          rm -rf config
           lb config \
             --apt-recommends true \
             --archive-areas "main universe multiverse restricted" \
