@@ -7,7 +7,6 @@ lightdm
 
 # Installer
 calamares
-calamares-settings-ubuntu
 rsync
 os-prober
 
