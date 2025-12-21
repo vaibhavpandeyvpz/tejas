@@ -14,24 +14,24 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - distribution: noble
-            codename: noble
-            runner: ubuntu-24.04
+          - distribution: jammy
+            codename: jammy
+            runner: ubuntu-22.04
             profile: user
 
-          - distribution: noble
-            codename: noble
-            runner: ubuntu-24.04
+          - distribution: jammy
+            codename: jammy
+            runner: ubuntu-22.04
             profile: developer
 
-          - distribution: jammy
-            codename: jammy
-            runner: ubuntu-22.04
+          - distribution: noble
+            codename: noble
+            runner: ubuntu-24.04
             profile: user
 
-          - distribution: jammy
-            codename: jammy
-            runner: ubuntu-22.04
+          - distribution: noble
+            codename: noble
+            runner: ubuntu-24.04
             profile: developer
 
     steps:

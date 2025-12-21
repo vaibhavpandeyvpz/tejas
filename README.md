@@ -3,6 +3,7 @@
 **Tejas Linux** is a lightweight, fast, and secure Linux distribution based on **Ubuntu** and **XFCE**.
 
 It is designed to be:
+
 - ⚡ Fast and minimal by default
 - 🧑‍💻 Friendly for developers and power users
 - 🔐 Secure Boot–ready (signed GRUB & kernel)
@@ -29,12 +30,13 @@ Tejas is built and maintained as a **clean Ubuntu derivative**, without modifyin
 
 ## 📦 Editions (Flavours)
 
-| Flavour | Target users | Notes |
-|------|-------------|------|
-| **User** | General users | Smaller ISO, no docs/man pages |
+| Flavour       | Target users            | Notes                                        |
+| ------------- | ----------------------- | -------------------------------------------- |
+| **User**      | General users           | Smaller ISO, no docs/man pages               |
 | **Developer** | Developers, power users | Includes man pages, headers, debugging tools |
 
 Both flavours share:
+
 - Same base system
 - Same installer
 - Same Secure Boot chain
@@ -51,7 +53,7 @@ You must build on **Ubuntu**.
 ```bash
 sudo apt update
 sudo apt install -y live-build debootstrap squashfs-tools xorriso
-````
+```
 
 ### 2️⃣ Clone the repository
 
@@ -88,9 +90,9 @@ Tejas Linux ISOs are built automatically using GitHub Actions.
 
 Each CI run produces:
 
-* ISO image
-* `.sha256` checksum
-* `.sig` GPG signature
+- ISO image
+- `.sha256` checksum
+- `.sig` GPG signature
 
 Artifacts are named like:
 
@@ -130,18 +132,17 @@ Only use the ISO if **both checks succeed**.
 
 Recommended methods:
 
-* **Linux**
+- **Linux**
 
   ```bash
   sudo dd if=tejas-linux.iso of=/dev/sdX bs=4M status=progress oflag=sync
   ```
 
-* **Windows**
+- **Windows**
+  - Rufus (DD mode)
+  - Ventoy
 
-  * Rufus (DD mode)
-  * Ventoy
-
-* **macOS**
+- **macOS**
 
   ```bash
   sudo dd if=tejas-linux.iso of=/dev/diskN bs=4m
@@ -164,10 +165,10 @@ config/
 
 ## 🔐 Secure Boot & drivers
 
-* Tejas Linux supports **Secure Boot on amd64**
-* NVIDIA and Wi-Fi drivers use **DKMS + MOK enrollment**
-* Users may be prompted **once** to enroll a key when installing proprietary drivers
-* This is expected and documented behavior
+- Tejas Linux supports **Secure Boot on amd64**
+- NVIDIA and Wi-Fi drivers use **DKMS + MOK enrollment**
+- Users may be prompted **once** to enroll a key when installing proprietary drivers
+- This is expected and documented behavior
 
 ---
 
@@ -187,10 +188,10 @@ Tejas Linux is **not affiliated with or endorsed by Canonical**.
 
 Contributions are welcome:
 
-* Bug reports
-* Package suggestions
-* Documentation improvements
-* CI improvements
+- Bug reports
+- Package suggestions
+- Documentation improvements
+- CI improvements
 
 Please open an issue before large changes.
 
@@ -202,13 +203,13 @@ Tejas Linux is under **active development**.
 
 Current focus:
 
-* Stability
-* Hardware compatibility
-* Clean user experience
+- Stability
+- Hardware compatibility
+- Clean user experience
 
 ---
 
 ## 🔗 Links
 
-* GitHub Issues: [https://github.com/](https://github.com/vaibhavpandeyvpz/tejas/issues)
-* Releases: [https://github.com/](https://github.com/vaibhavpandeyvpz/tejas/releases)
+- GitHub Issues: [https://github.com/](https://github.com/vaibhavpandeyvpz/tejas/issues)
+- Releases: [https://github.com/](https://github.com/vaibhavpandeyvpz/tejas/releases)
