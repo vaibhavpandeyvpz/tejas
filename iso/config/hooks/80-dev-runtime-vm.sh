@@ -13,7 +13,6 @@ echo "[dev-env] Installing pyenv, rbenv, nvm"
 # Base dependencies
 apt update
 apt install -y \
-  git curl build-essential \
   libssl-dev zlib1g-dev libbz2-dev \
   libreadline-dev libsqlite3-dev \
   libncursesw5-dev xz-utils tk-dev \
