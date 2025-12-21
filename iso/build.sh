@@ -146,6 +146,7 @@ mkdir -p "$OUT"
 grub-mkrescue \
   -o "$OUT/tejas-linux-$VERSION-$PROFILE-amd64.iso" \
   "$IMAGE"
+sudo chown -R $USER:$USER iso/out
 
-echo "[DONE] ISO created:"
+echo "[DONE] ISO created"
 ls -lh "$OUT"
