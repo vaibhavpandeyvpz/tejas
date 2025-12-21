@@ -11,23 +11,44 @@ jobs:
   build:
     runs-on: ${{ matrix.runner }}
     strategy:
+      fail-fast: false
       matrix:
         include:
           - distribution: noble
             codename: noble
             runner: ubuntu-24.04
+            profile: user
+
+          - distribution: noble
+            codename: noble
+            runner: ubuntu-24.04
+            profile: developer
+
           - distribution: jammy
             codename: jammy
             runner: ubuntu-22.04
+            profile: user
+
+          - distribution: jammy
+            codename: jammy
+            runner: ubuntu-22.04
+            profile: developer
+
     steps:
       - uses: actions/checkout@v4
 
+      # 🔢 Generate version
+      - name: Set version
+        id: version
+        run: |
+          DATE=$(date +%Y.%m.%d)
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          VERSION="${DATE}-${SHORT_SHA}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
       - name: Free disk space
         run: |
-          sudo rm -rf \
-            /usr/share/dotnet \
-            /opt/ghc \
-            /usr/local/lib/android
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/lib/android
           sudo apt clean
 
       - name: Install dependencies
@@ -42,10 +63,12 @@ jobs:
             qemu-utils \
             shim-signed \
             squashfs-tools \
-            xorriso
+            xorriso \
+            gnupg
 
       - name: Configure live-build
         run: |
+          lb clean --purge
           lb config \
             --apt-recommends true \
             --archive-areas "main universe multiverse restricted" \
@@ -55,19 +78,43 @@ jobs:
             --compression zstd \
             --compression-level 19 \
             --debian-installer false \
-            --distribution ${{ matrix.distribution }}
+            --distribution ${{ matrix.distribution }} \
+            --profiles ${{ matrix.profile }}
 
       - name: Build ISO
         run: sudo lb build
 
+      # 📦 Rename with version
       - name: Rename ISO
         run: |
           mkdir -p dist
           ISO=$(ls *.iso | head -n1)
-          mv "$ISO" dist/tejas-linux-${{ matrix.codename }}-amd64.iso
+          OUT="tejas-linux-${{ matrix.codename }}-${{ matrix.profile }}-${{ steps.version.outputs.version }}-amd64.iso"
+          mv "$ISO" "dist/$OUT"
+          echo "ISO_NAME=$OUT" >> $GITHUB_ENV
 
-      - name: Upload ISO
+      # 🔐 Import GPG key
+      - name: Import GPG key
+        run: |
+          echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+
+      # 🔑 SHA256 + GPG sign
+      - name: Generate checksums and signatures
+        run: |
+          cd dist
+          sha256sum "$ISO_NAME" > "$ISO_NAME.sha256"
+          gpg --batch --yes --pinentry-mode loopback \
+              --passphrase "${{ secrets.GPG_PASSPHRASE }}" \
+              --detach-sign "$ISO_NAME"
+          gpg --batch --yes --pinentry-mode loopback \
+              --passphrase "${{ secrets.GPG_PASSPHRASE }}" \
+              --detach-sign "$ISO_NAME.sha256"
+
+      # ⬆️ Upload artifacts
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: tejas-linux-iso-${{ matrix.codename }}
-          path: "dist/tejas-linux-${{ matrix.codename }}-amd64.iso"
+          name: tejas-linux-${{ matrix.codename }}-${{ matrix.profile }}
+          path: dist/*
