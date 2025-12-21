@@ -59,7 +59,8 @@ jobs:
             casper \
             rsync \
             calamares \
-            os-prober
+            os-prober \
+            mtools
 
       # ----------------------------
       # Build ISO
