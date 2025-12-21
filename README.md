@@ -1,59 +1,71 @@
 # Tejas Linux
 
-**Tejas Linux** is a lightweight, fast, and secure Linux distribution based on **Ubuntu**, built using a **custom ISO pipeline** with **debootstrap, Casper, GRUB, and xorriso**.
+**Tejas Linux** is a lightweight, secure, Ubuntu-based Linux distribution built using a **custom, fully transparent ISO build pipeline** based on **debootstrap, Casper, GRUB, and xorriso**.
 
-Tejas intentionally avoids fragile legacy tooling in favor of an explicit, reproducible, and inspectable build system — while remaining fully compatible with the Ubuntu ecosystem.
+Tejas intentionally avoids fragile legacy tooling in favor of an explicit, reproducible, and inspectable build system, while remaining fully compatible with the Ubuntu ecosystem.
 
 ---
 
-## ✨ Key Highlights
+## Overview
 
-- ⚡ Lightweight **XFCE** desktop
-- 💿 **Single ISO** supporting:
+Tejas Linux is designed for users who value:
+
+- A clean and fast desktop experience
+- Strong Secure Boot guarantees without custom keys
+- A modern installer
+- Deterministic, auditable build processes
+- Long-term maintainability over convenience tooling
+
+---
+
+## Key Highlights
+
+- Lightweight XFCE desktop environment
+- Single ISO supporting:
   - UEFI
   - Secure Boot
   - Legacy BIOS
 
-- 🔐 Secure Boot enabled by default (no custom keys)
-- 🧑‍💻 **Two editions**: User & Developer
-- 🖥️ **Calamares** graphical installer
-- 🤖 CI-built ISOs via GitHub Actions
-- 🔏 **GPG-signed releases**
-- 🧼 No `live-build`, no `syslinux`, no legacy hacks
+- Secure Boot enabled by default (no custom keys or enrollment)
+- Two editions: User and Developer
+- Calamares graphical installer
+- CI-built ISOs using GitHub Actions
+- GPG-signed releases
+- No `live-build`, no `syslinux`, no legacy boot hacks
 
 ---
 
-## 📦 Editions
+## Editions
 
 Tejas Linux is published in two editions built from the same base system.
 
-| Edition       | Intended for             | Differences                          |
-| ------------- | ------------------------ | ------------------------------------ |
-| **User**      | General users            | Minimal system, no dev tools or docs |
-| **Developer** | Developers / power users | Compilers, headers, man pages        |
+| Edition   | Intended for             | Differences                          |
+| --------- | ------------------------ | ------------------------------------ |
+| User      | General users            | Minimal system, no dev tools or docs |
+| Developer | Developers / power users | Compilers, headers, man pages        |
 
 Both editions share:
 
-- Same kernel
-- Same Secure Boot chain
-- Same installer
-- Same branding and defaults
+- The same kernel
+- The same Secure Boot chain
+- The same installer
+- The same branding and defaults
 
 ---
 
-## 💿 Boot & Firmware Support
+## Boot and Firmware Support
 
-Tejas Linux supports **all modern boot environments** from a **single ISO**.
+Tejas Linux supports modern and legacy boot environments from a **single ISO**.
 
 | Boot mode     | Supported |
 | ------------- | --------- |
-| UEFI          | ✅        |
-| Secure Boot   | ✅        |
-| Legacy BIOS   | ✅        |
-| VMware        | ✅        |
-| QEMU          | ✅        |
-| Ventoy        | ✅        |
-| Real hardware | ✅        |
+| UEFI          | Yes       |
+| Secure Boot   | Yes       |
+| Legacy BIOS   | Yes       |
+| VMware        | Yes       |
+| QEMU          | Yes       |
+| Ventoy        | Yes       |
+| Real hardware | Yes       |
 
 ### Secure Boot Trust Chain
 
@@ -64,19 +76,22 @@ UEFI firmware
              └── Linux kernel (Canonical-signed)
 ```
 
-- No custom keys
+- No custom Secure Boot keys
 - No user enrollment required
-- Same trust chain as Ubuntu Desktop
+- Same trust chain used by Ubuntu Desktop
+
+> Note: Legacy BIOS boot is supported via GRUB’s El Torito mechanism.
+> UEFI (with or without Secure Boot) is the primary and recommended boot method.
 
 ---
 
-## 🖥️ Installer
+## Installer
 
 Tejas Linux uses **Calamares**, a modern graphical installer.
 
-Installer features:
+Installer features include:
 
-- Guided & manual partitioning
+- Guided and manual partitioning
 - Dual-boot support
 - Secure Boot-safe bootloader installation
 - User, locale, and keyboard configuration
@@ -88,37 +103,31 @@ The installer can be launched:
 
 ---
 
-## 🔐 Secure Boot & Drivers
+## Secure Boot and Proprietary Drivers
 
 - Secure Boot works out of the box
 - Ubuntu’s signed kernel and bootloader are used
-- Proprietary drivers (e.g. NVIDIA) may trigger **MOK enrollment**
+- Proprietary drivers (for example, NVIDIA) may trigger **MOK enrollment**
   - This is expected behavior
   - Required only once per system
 
 ---
 
-## 🔎 Verifying Downloads (IMPORTANT)
+## Verifying Downloads (Important)
 
-All Tejas Linux releases are **cryptographically signed**.
+All Tejas Linux releases are cryptographically signed.
 
-### 🔑 Release Signing Key
+### Release Signing Key
 
 Tejas Linux releases are signed using the following GPG key:
 
-- **Key type:** RSA 4096
-- **Key ID:** `A3F982C55AD5DA0B`
-- **Fingerprint:**
-
-```
-XXXX XXXX XXXX XXXX XXXX  XXXX A3F9 82C5 5AD5 DA0B
-```
-
-(The full fingerprint is published in this repository.)
+- Key type: RSA 4096
+- Key ID: `A3F982C55AD5DA0B`
+- The full fingerprint is published in this repository
 
 ---
 
-### 1️⃣ Import the public key
+### Import the Public Key
 
 From this repository:
 
@@ -126,13 +135,13 @@ From this repository:
 gpg --import tejas-linux-public.key
 ```
 
-Or from Ubuntu keyserver:
+Or from the Ubuntu keyserver:
 
 ```bash
 gpg --keyserver keyserver.ubuntu.com --recv-keys A3F982C55AD5DA0B
 ```
 
-Verify fingerprint:
+Verify the fingerprint:
 
 ```bash
 gpg --fingerprint A3F982C55AD5DA0B
@@ -140,7 +149,7 @@ gpg --fingerprint A3F982C55AD5DA0B
 
 ---
 
-### 2️⃣ Verify the ISO signature
+### Verify the ISO Signature
 
 ```bash
 gpg --verify tejas-linux.iso.sig tejas-linux.iso
@@ -154,40 +163,59 @@ Good signature from "Tejas Linux Release Signing Key"
 
 ---
 
-### 3️⃣ Verify the checksum
+### Verify the Checksum
 
 ```bash
 sha256sum -c tejas-linux.iso.sha256
 ```
 
-Expected:
+Expected result:
 
 ```
 OK
 ```
 
-> **Only use the ISO if both checks succeed.**
+Only use the ISO if **both checks succeed**.
 
 ---
 
-## 🏗️ Build System (for contributors)
+## Quick Start
+
+1. Download the latest ISO from:
+   [https://github.com/vaibhavpandeyvpz/tejas/releases](https://github.com/vaibhavpandeyvpz/tejas/releases)
+
+2. Verify the ISO (GPG signature and SHA256 checksum)
+
+3. Write the ISO to a USB drive:
+
+   ```bash
+   sudo dd if=tejas-linux.iso of=/dev/sdX bs=4M status=progress oflag=sync
+   ```
+
+4. Boot on any modern UEFI system (Secure Boot supported)
+
+---
+
+## Build System (For Contributors)
 
 Tejas Linux does **not** use `live-build`.
 
-Instead, it uses a **custom, deterministic pipeline**:
+Instead, it uses a custom, deterministic pipeline:
 
 ```
 debootstrap → casper → GRUB (BIOS + UEFI) → xorriso
 ```
 
-### Why not live-build?
+### Rationale
+
+`live-build` was intentionally avoided due to:
 
 - Broken hybrid ISO support on modern Ubuntu
-- Obsolete syslinux / gfxboot dependencies
+- Obsolete syslinux and gfxboot dependencies
 - Poor VMware compatibility
-- Fragile CI behavior
+- Fragile and opaque CI behavior
 
-This custom pipeline provides:
+The custom pipeline provides:
 
 - Full control over boot layout
 - Reliable Secure Boot support
@@ -195,13 +223,13 @@ This custom pipeline provides:
 
 ---
 
-## 🪝 Hooks (System Customization)
+## Hooks and System Customization
 
-Tejas Linux uses **explicit chroot hooks** instead of live-build hooks.
+Tejas Linux uses explicit chroot hooks instead of live-build hooks.
 
 Hooks are simple shell scripts that run **inside the root filesystem** during the build.
 
-### Hook location
+### Hook Location
 
 ```
 iso/config/hooks/
@@ -213,16 +241,16 @@ Hooks are:
 - Fully controlled by the project
 - Easy to debug and audit
 
-Typical hook responsibilities include:
+Typical responsibilities include:
 
-- Locale & timezone setup
+- Locale and timezone configuration
 - Branding (hostname, `/etc/issue`)
-- Stripping docs/man pages (User edition)
+- Stripping documentation and man pages (User edition)
 - Cleanup before squashfs creation
 
 ---
 
-## 🛠️ Build Locally (Ubuntu only)
+## Building Locally (Ubuntu Only)
 
 ### Prerequisites
 
@@ -238,6 +266,7 @@ sudo apt install -y \
   shim-signed \
   casper \
   calamares \
+  mtools \
   rsync
 ```
 
@@ -265,14 +294,14 @@ iso/out/
 
 ---
 
-## 🤖 Continuous Integration
+## Continuous Integration
 
-Tejas Linux ISOs are built automatically using **GitHub Actions**.
+Tejas Linux ISOs are built automatically using GitHub Actions.
 
 Each CI run produces:
 
-- User ISO
-- Developer ISO
+- User edition ISO
+- Developer edition ISO
 - SHA256 checksums
 - GPG signatures
 
@@ -280,15 +309,13 @@ All artifacts are uploaded and verifiable.
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```text
 iso/
 ├── build.sh
 ├── config/
-│   ├── rootfs/          # overlay (COMMITTED)
-│   │   ├── etc/
-│   │   └── usr/
+│   ├── rootfs/          # overlay (committed)
 │   ├── hooks/
 │   └── profiles/
 ├── image/
@@ -296,43 +323,64 @@ iso/
 │   ├── boot/grub/
 │   ├── casper/          # generated
 │   └── .disk/
-├── rootfs/              # generated (IGNORED)
-└── out/                 # generated (IGNORED)
+├── rootfs/              # generated (ignored)
+└── out/                 # generated (ignored)
 ```
 
 ---
 
-## 📜 Licensing
+## Known Limitations and Non-Goals
+
+- Tejas Linux currently targets **amd64 (x86_64)** systems only
+- ARM / aarch64 builds are not yet provided
+- Secure Boot relies on Ubuntu’s signed boot chain (no custom keys)
+- Snap is not enabled by default
+
+These are conscious design decisions.
+
+---
+
+## Security
+
+For reporting security vulnerabilities, please see [`SECURITY.md`](SECURITY.md).
+
+Do **not** report security issues via public GitHub issues.
+
+Project security contact: **[tejas.linux@vaibhavpandey.com](mailto:tejas.linux@vaibhavpandey.com)**
+
+---
+
+## Licensing
 
 Tejas Linux is licensed under the **GNU General Public License v3.0 (GPL-3.0)**.
 
-- All Tejas-specific scripts, build logic, and configuration in this repository are licensed under **GPL-3.0**, as described in the [`LICENSE`](LICENSE) file.
-- Tejas Linux redistributes **unmodified Ubuntu packages**, which remain under their respective upstream licenses.
+- All Tejas-specific scripts, build logic, and configuration in this repository are licensed under GPL-3.0, as described in the `LICENSE` file.
+- Tejas Linux redistributes unmodified Ubuntu packages, which remain under their respective upstream licenses.
 - Trademarks, logos, and brand names belong to their respective owners.
 
 Tejas Linux is **not affiliated with or endorsed by Canonical**.
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
-Contributions are welcome:
+Contributions are welcome, including:
 
 - Bug reports
 - Documentation improvements
 - Package suggestions
 - CI improvements
-- Branding & UX enhancements
+- UX and branding enhancements
 
-Please open an issue before large or breaking changes.
+Please open an issue before making large or breaking changes.
 
 ---
 
-## 📣 Project Status
+## Project Status
 
-Tejas Linux is under **active development**.
+Tejas Linux is under active development.
 
-Current focus:
+Current focus areas:
 
 - Stability
 - Hardware compatibility
@@ -341,7 +389,7 @@ Current focus:
 
 ---
 
-## 🔗 Links
+## Links
 
 - Repository: [https://github.com/vaibhavpandeyvpz/tejas](https://github.com/vaibhavpandeyvpz/tejas)
 - Issues: [https://github.com/vaibhavpandeyvpz/tejas/issues](https://github.com/vaibhavpandeyvpz/tejas/issues)
@@ -349,12 +397,12 @@ Current focus:
 
 ---
 
-## 🧠 Philosophy
+## Philosophy
 
-Tejas Linux is built **the hard way — on purpose**.
+Tejas Linux is built deliberately and transparently.
 
 - No fragile tooling
 - No legacy bootloaders
 - No hidden magic
 
-Just a **clean, modern Ubuntu-based distro** you can inspect, verify, and trust.
+Just a clean, modern, Ubuntu-based distribution that can be inspected, verified, and trusted.
