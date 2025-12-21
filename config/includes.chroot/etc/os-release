@@ -1,7 +1,7 @@
-NAME="Tejas OS"
+NAME="Tejas Linux"
 ID=tejas
 VERSION="1.0"
-PRETTY_NAME="Tejas OS 1.0"
+PRETTY_NAME="Tejas Linux 1.0"
 VERSION_ID="1.0"
 HOME_URL="https://github.com/vaibhavpandeyvpz/tejas"
 SUPPORT_URL="https://github.com/vaibhavpandeyvpz/tejas/issues"

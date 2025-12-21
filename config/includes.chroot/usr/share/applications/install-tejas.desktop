@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
-Name=Install Tejas OS
-Comment=Install Tejas OS on your computer
+Name=Install Tejas Linux
+Comment=Install Tejas Linux on your computer
 Exec=pkexec calamares
 Icon=system-installer
 Terminal=false
