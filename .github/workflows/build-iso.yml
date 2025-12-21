@@ -73,6 +73,11 @@ jobs:
             squashfs-tools \
             xorriso
 
+      - name: Sanity check isohybrid
+        run: |
+          which isohybrid
+          isohybrid --version
+
       # 🧹 Clean previous build
       - name: Clean live-build
         run: lb clean --purge
