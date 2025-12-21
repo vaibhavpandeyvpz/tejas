@@ -39,6 +39,14 @@ if [ ! -f /opt/nvm/nvm.sh ]; then
     | NVM_DIR=/opt/nvm bash
 fi
 
+# Pre-create required directories with safe permissions
+install -d -m 0755 /opt/pyenv/{shims,versions}
+install -d -m 0755 /opt/rbenv/{shims,versions}
+
+# Allow users to write versions
+chown -R root:root /opt/pyenv /opt/rbenv
+chmod -R a+rX /opt/pyenv /opt/rbenv
+
 # ---- profile integration ----
 cat <<'EOF' > /etc/profile.d/tejas-dev-env.sh
 # pyenv
