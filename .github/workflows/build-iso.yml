@@ -71,15 +71,7 @@ jobs:
             rsync \
             shim-signed \
             squashfs-tools \
-            syslinux-utils \
             xorriso
-
-      - name: Debug live-build isohybrid
-        run: |
-          dpkg -L live-build | grep binary_
-          sed -n '1,200p' /usr/share/live/build/binary_iso-hybrid
-          dpkg -L live-build | grep binary.sh
-          grep -n isohybrid $(dpkg -L live-build | grep binary.sh)
 
       # 🧹 Clean previous build
       - name: Clean live-build
