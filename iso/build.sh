@@ -8,7 +8,6 @@ MIRROR=http://archive.ubuntu.com/ubuntu
 
 PROFILE=${PROFILE:-user}
 echo "[INFO] Building Tejas profile: $PROFILE"
-echo "PROFILE=$PROFILE" | sudo tee $ROOTFS/etc/tejas-profile
 
 ROOTFS=iso/rootfs
 IMAGE=iso/image
@@ -51,9 +50,10 @@ sudo cp $ROOTFS/boot/vmlinuz-* $IMAGE/casper/vmlinuz
 sudo cp $ROOTFS/boot/initrd.img-* $IMAGE/casper/initrd
 
 echo "[9/12] Running chroot hooks"
+echo "PROFILE=$PROFILE" | sudo tee $ROOTFS/etc/tejas-profile
 for hook in iso/config/hooks/*.sh; do
   [ -f "$hook" ] || continue
-  echo "→ Running $(basename "$hook")"
+  echo "Running $(basename "$hook")"
   sudo chroot $ROOTFS /bin/bash < "$hook"
 done
 
