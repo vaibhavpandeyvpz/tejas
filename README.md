@@ -284,17 +284,20 @@ All artifacts are uploaded and verifiable.
 
 ```text
 iso/
-├── build.sh                # Main build script
+├── build.sh
 ├── config/
-│   ├── profiles/           # User / Developer package profiles
-│   └── hooks/              # Chroot hooks
-├── rootfs/                 # Temporary root filesystem
+│   ├── rootfs/          # overlay (COMMITTED)
+│   │   ├── etc/
+│   │   └── usr/
+│   ├── hooks/
+│   └── profiles/
 ├── image/
-│   ├── casper/             # Live system
-│   ├── EFI/BOOT/           # Secure Boot (shim + GRUB)
-│   ├── boot/grub/          # GRUB configs (BIOS + UEFI)
+│   ├── EFI/BOOT/
+│   ├── boot/grub/
+│   ├── casper/          # generated
 │   └── .disk/
-└── out/                    # Final ISOs
+├── rootfs/              # generated (IGNORED)
+└── out/                 # generated (IGNORED)
 ```
 
 ---

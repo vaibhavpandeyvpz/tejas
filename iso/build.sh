@@ -14,45 +14,48 @@ ROOTFS=iso/rootfs
 IMAGE=iso/image
 OUT=iso/out
 
-echo "[1/10] Bootstrap root filesystem"
+echo "[1/11] Bootstrap root filesystem"
 sudo debootstrap --arch=$ARCH --variant=minbase \
   $DISTRO $ROOTFS $MIRROR
 
-echo "[2/10] Mount system directories"
+echo "[2/11] Copying rootfs overlay"
+sudo rsync -a iso/config/rootfs/ iso/rootfs/
+
+echo "[3/11] Mount system directories"
 sudo mount --bind /dev  $ROOTFS/dev
 sudo mount --bind /proc $ROOTFS/proc
 sudo mount --bind /sys  $ROOTFS/sys
 
-echo "[3/10] Install base packages"
+echo "[4/11] Install base packages"
 xargs -a iso/config/profiles/base.packages \
   sudo chroot $ROOTFS apt install -y
 
-echo "[4/10] Apply $PROFILE packages"
+echo "[5/11] Apply $PROFILE packages"
 xargs -a iso/config/profiles/$PROFILE.packages \
   sudo chroot $ROOTFS apt install -y
 
-echo "[5/10] Generate filesystem manifest"
+echo "[6/11] Generate filesystem manifest"
 sudo chroot $ROOTFS dpkg-query -W \
   --showformat='${Package} ${Version}\n' \
   | sudo tee $IMAGE/casper/filesystem.manifest
 
-echo "[6/10] Copy kernel and initrd"
+echo "[7/11] Copy kernel and initrd"
 sudo cp $ROOTFS/boot/vmlinuz-* $IMAGE/casper/vmlinuz
 sudo cp $ROOTFS/boot/initrd.img-* $IMAGE/casper/initrd
 
-echo "[7/10] Running chroot hooks"
+echo "[8/11] Running chroot hooks"
 for hook in iso/config/hooks/*.sh; do
   [ -f "$hook" ] || continue
   echo "→ Running $(basename "$hook")"
   sudo chroot $ROOTFS /bin/bash < "$hook"
 done
 
-echo "[8/10] Create squashfs"
+echo "[9/11] Create squashfs"
 sudo mksquashfs $ROOTFS \
   $IMAGE/casper/filesystem.squashfs \
   -e boot -comp zstd
 
-echo "[9/10] Install Secure Boot EFI binaries"
+echo "[10/11] Install Secure Boot EFI binaries"
 # Shim (Microsoft signed)
 sudo cp /usr/lib/shim/shimx64.efi.signed \
   iso/image/EFI/BOOT/BOOTX64.EFI
@@ -68,7 +71,7 @@ grub-mkimage \
   biosdisk iso9660 part_msdos part_gpt \
   normal linux configfile search search_fs_file
 
-echo "[10/10] Create ISO"
+echo "[11/11] Create ISO"
 xorriso -as mkisofs \
   -r \
   -V "TEJAS_LINUX" \
@@ -83,5 +86,5 @@ xorriso -as mkisofs \
   -no-emul-boot \
   iso/image
 
-echo "[DONE] ISO created:"
+echo "[DONE] ISO created"
 ls -lh $OUT
