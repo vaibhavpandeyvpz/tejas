@@ -74,10 +74,9 @@ jobs:
             syslinux-utils \
             xorriso
 
-      - name: Sanity check isohybrid
+      - name: Fix isohybrid path for live-build
         run: |
-          which isohybrid
-          isohybrid --version
+          sudo ln -sf $(which isohybrid) /usr/sbin/isohybrid
 
       # 🧹 Clean previous build
       - name: Clean live-build
