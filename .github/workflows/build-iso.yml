@@ -74,12 +74,9 @@ jobs:
             syslinux-utils \
             xorriso
 
-      - name: Fix isohybrid path for live-build
+      - name: Debug live-build isohybrid
         run: |
-          ISOHYBRID=$(which isohybrid)
-          sudo ln -sf "$ISOHYBRID" /bin/isohybrid
-          sudo ln -sf "$ISOHYBRID" /sbin/isohybrid
-          sudo ln -sf "$ISOHYBRID" /usr/sbin/isohybrid
+          grep ISOHYBRID -n /usr/lib/live/build/binary.sh || true
 
       # 🧹 Clean previous build
       - name: Clean live-build
