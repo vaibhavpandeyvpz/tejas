@@ -52,16 +52,10 @@ cat <<'EOF' > /etc/profile.d/tejas-dev-env.sh
 # pyenv
 export PYENV_ROOT="/opt/pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
-if command -v pyenv >/dev/null 2>&1; then
-  eval "$(pyenv init -)"
-fi
 
 # rbenv
 export RBENV_ROOT="/opt/rbenv"
 export PATH="$RBENV_ROOT/bin:$PATH"
-if command -v rbenv >/dev/null 2>&1; then
-  eval "$(rbenv init -)"
-fi
 
 # nvm
 export NVM_DIR="/opt/nvm"
