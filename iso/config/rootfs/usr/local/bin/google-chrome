@@ -1,8 +1,0 @@
-#!/bin/bash
-
-# Detect live session (casper)
-if grep -qs "boot=casper" /proc/cmdline; then
-  exec /usr/bin/google-chrome-stable --no-sandbox "$@"
-else
-  exec /usr/bin/google-chrome-stable "$@"
-fi
