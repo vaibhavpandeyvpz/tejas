@@ -51,9 +51,9 @@ images:
 ### COLORS
 
 style:
-   SidebarBackground:        "#292F34"
-   SidebarText:              "#FFFFFF"
-   SidebarTextCurrent:       "#292F34"
+   SidebarBackground: "#292F34"
+   SidebarText: "#FFFFFF"
+   SidebarTextCurrent: "#292F34"
    SidebarBackgroundCurrent: "#D35400"
 
 

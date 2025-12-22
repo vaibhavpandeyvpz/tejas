@@ -44,15 +44,9 @@ EOF
 sudo chroot "$ROOTFS" apt update
 
 # -----------------------------
-# 3. Apply rootfs overlay
+# 3. Mount virtual filesystems
 # -----------------------------
-echo "[3/13] Copy rootfs overlay"
-sudo rsync -a iso/config/rootfs/ "$ROOTFS/"
-
-# -----------------------------
-# 4. Mount virtual filesystems
-# -----------------------------
-echo "[4/13] Mount system directories"
+echo "[3/13] Mount system directories"
 sudo mount --bind /dev       "$ROOTFS/dev"
 sudo mount --bind /dev/pts   "$ROOTFS/dev/pts"
 sudo mount --bind /proc      "$ROOTFS/proc"
@@ -61,11 +55,17 @@ sudo mount --bind /sys       "$ROOTFS/sys"
 trap 'sudo umount -lf "$ROOTFS/dev/pts" "$ROOTFS/dev" "$ROOTFS/proc" "$ROOTFS/sys" 2>/dev/null || true' EXIT
 
 # -----------------------------
-# 5. Install base packages
+# 4. Install base packages
 # -----------------------------
-echo "[5/13] Install base packages"
+echo "[4/13] Install base packages"
 BASE_PKGS=$(grep -Ev '^\s*#|^\s*$' iso/config/profiles/base.packages)
 sudo chroot "$ROOTFS" apt install -y $BASE_PKGS
+
+# -----------------------------
+# 5. Apply rootfs overlay
+# -----------------------------
+echo "[5/13] Copy rootfs overlay"
+sudo rsync -a iso/config/rootfs/ "$ROOTFS/"
 
 # -----------------------------
 # 6. Install profile packages
