@@ -41,10 +41,20 @@ strings:
 
 
 ### IMAGES
+
 images:
     productIcon: "squid.png"
     productLogo: "squid.png"
     productWelcome: "languages.png"
+
+
+### COLORS
+
+style:
+   SidebarBackground:        "#292F34"
+   SidebarText:              "#FFFFFF"
+   SidebarTextCurrent:       "#292F34"
+   SidebarBackgroundCurrent: "#D35400"
 
 
 ### SLIDESHOW
