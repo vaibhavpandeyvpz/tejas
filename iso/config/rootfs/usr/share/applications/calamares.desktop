@@ -2,7 +2,7 @@
 Type=Application
 Name=Install Tejas Linux
 Comment=Install Tejas Linux to disk
-Exec=pkexec /usr/bin/calamares -b tejas
+Exec=pkexec calamares
 Icon=system-software-install
 Terminal=false
 Categories=System;Installer;
