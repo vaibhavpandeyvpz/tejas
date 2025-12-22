@@ -9,7 +9,6 @@ xfce4-terminal
 
 # Installer
 calamares
-calamares-settings-ubuntu
 os-prober
 rsync
 
