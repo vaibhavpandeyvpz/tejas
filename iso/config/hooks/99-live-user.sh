@@ -14,7 +14,13 @@ fi
 passwd -d "$LIVE_USER"
 
 # Required groups for desktop session
-usermod -aG sudo,adm,video,audio,plugdev,netdev "$LIVE_USER"
+# Includes groups from users.conf plus desktop-specific groups (video, audio, netdev)
+usermod -aG sudo,adm,video,audio,plugdev,netdev,cdrom,dip,lpadmin "$LIVE_USER"
+
+# Add sambashare if it exists (optional group)
+if getent group sambashare >/dev/null 2>&1; then
+  usermod -aG sambashare "$LIVE_USER"
+fi
 
 # Set display name
 usermod -c "Tejas Linux" tejas

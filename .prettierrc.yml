@@ -1,0 +1,5 @@
+printWidth: 80
+overrides:
+  - files: "iso/config/rootfs/etc/calamares/**/*.conf"
+    options:
+      parser: yaml
