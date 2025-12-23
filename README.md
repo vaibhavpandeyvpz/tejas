@@ -479,6 +479,95 @@ iso/out/
 
 ---
 
+## Testing with QEMU
+
+You can test the built ISO locally using QEMU before deploying to real hardware.
+
+### Prerequisites
+
+Install QEMU and OVMF firmware:
+
+**On Ubuntu/Debian:**
+```bash
+sudo apt install -y qemu-system-x86 ovmf
+```
+
+**On macOS (Homebrew):**
+```bash
+brew install qemu
+```
+
+**On Fedora/RHEL:**
+```bash
+sudo dnf install -y qemu-system-x86 edk2-ovmf
+```
+
+### Create a Virtual Disk
+
+```bash
+# Create a 10GB qcow2 disk image
+qemu-img create -f qcow2 ~/QEMU/tejas.qcow2 10G
+```
+
+> **Note:** Adjust the path (`~/QEMU/`) to your preferred location.
+
+### Run the ISO in QEMU
+
+**On Linux:**
+
+```bash
+qemu-system-x86_64 \
+  -machine q35 \
+  -m 2048 \
+  -smp 4 \
+  -drive if=pflash,format=raw,readonly=on,file=/usr/share/OVMF/OVMF_CODE.fd \
+  -drive if=pflash,format=raw,file=/usr/share/OVMF/OVMF_VARS.fd \
+  -cdrom iso/out/tejas-linux-2025.12.23-user-amd64.iso \
+  -drive file=~/QEMU/tejas.qcow2,if=virtio \
+  -device virtio-vga \
+  -device qemu-xhci \
+  -device usb-tablet
+```
+
+**On macOS (Homebrew):**
+
+```bash
+qemu-system-x86_64 \
+  -machine q35 \
+  -m 2048 \
+  -smp 4 \
+  -drive if=pflash,format=raw,readonly=on,file=/opt/homebrew/share/qemu/edk2-x86_64-code.fd \
+  -drive if=pflash,format=raw,file=/opt/homebrew/share/qemu/edk2-x86_64-vars.fd \
+  -cdrom iso/out/tejas-linux-2025.12.23-user-amd64.iso \
+  -drive file=~/QEMU/tejas.qcow2,if=virtio \
+  -device virtio-vga \
+  -device qemu-xhci \
+  -device usb-tablet
+```
+
+**Finding OVMF firmware paths:**
+
+- **Linux (Ubuntu/Debian):** `/usr/share/OVMF/OVMF_CODE.fd` and `/usr/share/OVMF/OVMF_VARS.fd`
+- **Linux (Fedora/RHEL):** `/usr/share/edk2/ovmf/OVMF_CODE.fd` and `/usr/share/edk2/ovmf/OVMF_VARS.fd`
+- **macOS (Homebrew):** `/opt/homebrew/share/qemu/edk2-x86_64-code.fd` and `/opt/homebrew/share/qemu/edk2-x86_64-vars.fd`
+- **macOS (MacPorts):** `/opt/local/share/qemu/edk2-x86_64-code.fd` and `/opt/local/share/qemu/edk2-x86_64-vars.fd`
+
+**Command options explained:**
+
+- `-machine q35`: Modern Q35 chipset (better UEFI support)
+- `-m 2048`: 2GB RAM (adjust as needed)
+- `-smp 4`: 4 CPU cores (adjust as needed)
+- `-drive if=pflash`: OVMF firmware for UEFI boot
+- `-cdrom`: ISO file to boot from
+- `-drive file=...`: Virtual disk for installation
+- `-device virtio-vga`: VirtIO graphics (better performance)
+- `-device qemu-xhci`: USB 3.0 controller
+- `-device usb-tablet`: USB tablet for better mouse integration
+
+**Note:** Replace `tejas-linux-2025.12.23-user-amd64.iso` with your actual ISO filename.
+
+---
+
 ## Continuous Integration
 
 Tejas Linux ISOs are built automatically using GitHub Actions.
