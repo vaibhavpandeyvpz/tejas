@@ -15,7 +15,7 @@ fi
 # Always rebuild the Docker image to ensure latest code is included
 # Docker's layer caching makes this fast if nothing changed
 echo "[INFO] Building Docker image (with project code)..."
-docker build -t tejas-builder .
+docker build --platform linux/amd64 -t tejas-builder .
 
 echo "[INFO] Building Tejas Linux ($PROFILE edition)..."
 
@@ -24,6 +24,7 @@ mkdir -p iso/out
 
 # Run the build (only mount iso/out to save the final ISO)
 docker run --rm --privileged \
+  --platform linux/amd64 \
   -v "$(pwd)/iso/out:/workspace/iso/out" \
   -w /workspace \
   -e PROFILE="$PROFILE" \
