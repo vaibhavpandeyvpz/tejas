@@ -95,11 +95,14 @@ Installer features include:
 - Dual-boot support
 - Secure Boot-safe bootloader installation
 - User, locale, and keyboard configuration
+- Offline installation of Secure Boot packages (no internet required)
 
 The installer can be launched:
 
 - Automatically in the live session, or
-- Manually via **“Install Tejas Linux”** on the desktop
+- Manually via **"Install Tejas Linux"** on the desktop
+
+**Note:** The default locale is set to Indian English (`en_IN.UTF-8`), with support for multiple Indian languages (Hindi, Bengali, Tamil, Telugu, Marathi, Gujarati, Kannada, Malayalam, Punjabi, Urdu).
 
 ---
 
@@ -206,6 +209,30 @@ Instead, it uses a custom, deterministic pipeline:
 debootstrap → casper → GRUB (BIOS + UEFI) → xorriso
 ```
 
+### Build Process Overview
+
+The build process consists of 19 steps:
+
+1. **Bootstrap** - Create base root filesystem using debootstrap
+2. **Configure APT** - Set up Ubuntu repositories
+3. **Mount virtual filesystems** - Prepare chroot environment
+4. **Configure debconf** - Set non-interactive defaults
+5. **Install offline packages** - Install Secure Boot packages (grub-efi-amd64-signed, shim-signed)
+6. **Create APT repository** - Build local repository in ISO with GPG signing
+7. **Create apt-cdrom metadata** - Add `.disk/` directory for CD-ROM detection
+8. **Install base packages** - Install core system packages
+9. **Apply rootfs overlay** - Copy custom configuration files
+10. **Install profile packages** - Install edition-specific packages
+11. **Run hooks** - Execute customization scripts
+12. **Reset debconf** - Clear build-time settings
+13. **Configure networking** - Set up NetworkManager for live session
+14. **Generate manifest** - Create package manifest
+15. **Copy kernel/initrd** - Extract boot files
+16. **Unmount filesystems** - Clean up chroot mounts
+17. **Create squashfs** - Compress root filesystem
+18. **Install EFI binaries** - Copy Secure Boot binaries
+19. **Create ISO** - Generate final ISO image
+
 ### Rationale
 
 `live-build` was intentionally avoided due to:
@@ -220,6 +247,18 @@ The custom pipeline provides:
 - Full control over boot layout
 - Reliable Secure Boot support
 - Predictable, debuggable builds
+- Offline package installation support
+
+### Offline Package Installation
+
+Tejas Linux includes an **embedded APT repository** in the ISO that enables offline installation of Secure Boot packages during system installation. This feature:
+
+- **No internet required** - Secure Boot packages (GRUB, shim) are installed from the ISO
+- **GPG-signed repository** - The repository is automatically signed during build
+- **Automatic detection** - The installer uses `apt-cdrom` to detect and add the ISO as a repository source
+- **Trusted by default** - The signing key is included in the installed system's trusted keyring
+
+This ensures Secure Boot works even on systems without internet connectivity during installation.
 
 ---
 
@@ -443,19 +482,22 @@ Windows users have two options for building Tejas Linux:
 
 ```bash
 sudo apt install -y \
+  apt-utils \
   debootstrap \
-  squashfs-tools \
-  xorriso \
-  grub-efi-amd64-bin \
+  gnupg \
   grub-efi-amd64-signed \
-  grub-pc-bin \
-  grub-common \
-  shim-signed \
-  casper \
-  calamares \
   mtools \
-  rsync
+  rsync \
+  shim-signed \
+  squashfs-tools \
+  xorriso
 ```
+
+**Note:**
+
+- `apt-utils` (includes `apt-ftparchive`) and `gnupg` are required for creating and signing the embedded APT repository in the ISO.
+- `grub-efi-amd64-signed` and `shim-signed` are needed for Secure Boot EFI binaries.
+- Other GRUB packages and Calamares are installed during the build process from the root filesystem.
 
 #### Build User Edition
 
@@ -584,6 +626,15 @@ Each CI run produces:
 
 All artifacts are uploaded and verifiable.
 
+### Build Features
+
+The CI build process includes:
+
+- **Automatic GPG key generation** - A signing key is generated for each build to sign the embedded APT repository
+- **Repository signing** - The ISO's APT repository is signed with a clearsigned `InRelease` file
+- **Key distribution** - The public key is automatically included in the installed system's trusted keyring
+- **Offline support** - Secure Boot packages can be installed without internet connectivity
+
 ---
 
 ## Repository Structure
@@ -593,15 +644,20 @@ iso/
 ├── build.sh
 ├── config/
 │   ├── rootfs/          # overlay (committed)
-│   ├── hooks/
-│   └── profiles/
+│   │   └── etc/
+│   │       ├── apt/trusted.gpg.d/  # GPG key for repository signing
+│   │       └── calamares/          # Installer configuration
+│   ├── hooks/           # Build-time customization scripts
+│   └── profiles/        # Package lists (base, user, developer, offline)
 ├── image/
-│   ├── EFI/BOOT/
-│   ├── boot/grub/
-│   ├── casper/          # generated
-│   └── .disk/
-├── rootfs/              # generated (ignored)
-└── out/                 # generated (ignored)
+│   ├── EFI/BOOT/        # Secure Boot EFI binaries
+│   ├── boot/grub/       # GRUB configuration
+│   ├── casper/          # Live filesystem (generated)
+│   ├── dists/           # APT repository metadata (generated)
+│   ├── pool/            # Debian packages (generated)
+│   └── .disk/           # apt-cdrom metadata (generated)
+├── rootfs/              # Root filesystem (generated, ignored)
+└── out/                 # Final ISO (generated, ignored)
 ```
 
 ---
