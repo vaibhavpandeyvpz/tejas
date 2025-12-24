@@ -22,7 +22,4 @@ locale-gen
 update-locale LANG=en_IN.UTF-8
 
 apt purge -y \
-  language-pack-* \
-  hunspell-* \
-  mythes-* \
-  aspell-* || true
+  language-pack-* || true

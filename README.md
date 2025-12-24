@@ -666,8 +666,7 @@ iso/
 
 - Tejas Linux currently targets **amd64 (x86_64)** systems only
 - ARM / aarch64 builds are not yet provided
-- Secure Boot relies on Ubuntu’s signed boot chain (no custom keys)
-- Snap is not enabled by default
+- Secure Boot relies on Ubuntu's signed boot chain (no custom keys)
 
 These are conscious design decisions.
 

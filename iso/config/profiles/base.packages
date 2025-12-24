@@ -22,12 +22,13 @@ rsync
 apt-transport-https
 curl
 gpg
+snapd
 wget
 
 # Userland apps
 catfish
-evolution
 libreoffice
 orage
 ristretto
+sylpheed
 vlc

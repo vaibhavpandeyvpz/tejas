@@ -152,6 +152,7 @@ echo "install" > iso/image/.disk/cd_type
 echo "[8/20] Install base packages"
 BASE_PKGS=$(grep -Ev '^\s*#|^\s*$' iso/config/profiles/base.packages)
 sudo chroot "$ROOTFS" apt-get install -y $BASE_PKGS
+sudo chroot "$ROOTFS" systemctl enable snapd
 
 # -----------------------------
 # 9. Apply rootfs overlay
@@ -174,7 +175,7 @@ echo "$PROFILE" | sudo tee "$ROOTFS/etc/tejas-profile"
 
 for hook in iso/config/hooks/*.sh; do
   [ -f "$hook" ] || continue
-  echo "→ Running $(basename "$hook")"
+  echo "> Running $(basename "$hook")"
   sudo chroot "$ROOTFS" /bin/bash < "$hook"
 done
 
