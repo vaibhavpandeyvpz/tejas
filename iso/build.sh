@@ -103,7 +103,14 @@ mkdir -p iso/image/dists/$DISTRO/main/binary-amd64
 apt-ftparchive packages iso/image/pool > iso/image/dists/$DISTRO/main/binary-amd64/Packages
 gzip -9 iso/image/dists/$DISTRO/main/binary-amd64/Packages
 
-apt-ftparchive release iso/image/dists/$DISTRO > iso/image/dists/$DISTRO/Release
+apt-ftparchive \
+  -o APT::FTPArchive::Release::Origin="Tejas Linux" \
+  -o APT::FTPArchive::Release::Label="Tejas Linux" \
+  -o APT::FTPArchive::Release::Suite="$DISTRO" \
+  -o APT::FTPArchive::Release::Codename="$DISTRO" \
+  -o APT::FTPArchive::Release::Components="main" \
+  -o APT::FTPArchive::Release::Architectures="amd64" \
+  release iso/image > iso/image/dists/$DISTRO/Release
 
 # -----------------------------
 # 7. Create apt-cdrom metadata
@@ -159,8 +166,15 @@ sudo mkdir -p "$ROOTFS/var/cache/debconf" 2>/dev/null || true
 # 13. Fix internet connectivity
 # -----------------------------
 echo "[13/19] Configure live networking"
+sudo chroot "$ROOTFS" mkdir -p /etc/netplan
+sudo chroot "$ROOTFS" tee /etc/netplan/01-network-manager.yaml >/dev/null <<'EOF'
+network:
+  version: 2
+  renderer: NetworkManager
+EOF
 sudo chroot "$ROOTFS" rm -f /etc/resolv.conf
 sudo chroot "$ROOTFS" ln -s /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+sudo chroot "$ROOTFS" systemctl mask systemd-networkd
 sudo chroot "$ROOTFS" systemctl enable NetworkManager systemd-resolved
 
 # -----------------------------
@@ -210,16 +224,16 @@ sudo mksquashfs \
 echo "[18/19] Install Secure Boot EFI binaries"
 
 # Microsoft-signed shim
-sudo cp $ROOTFS/usr/lib/shim/shimx64.efi.signed \
+sudo cp /usr/lib/shim/shimx64.efi.signed \
   "$IMAGE/EFI/BOOT/BOOTX64.EFI"
 
 # Canonical-signed GRUB
-sudo cp $ROOTFS/usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed \
+sudo cp /usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed \
   "$IMAGE/EFI/BOOT/grubx64.efi"
 
 # Optional MOK manager
-if [ -f $ROOTFS/usr/lib/shim/mmx64.efi ]; then
-  sudo cp $ROOTFS/usr/lib/shim/mmx64.efi "$IMAGE/EFI/BOOT/"
+if [ -f /usr/lib/shim/mmx64.efi ]; then
+  sudo cp /usr/lib/shim/mmx64.efi "$IMAGE/EFI/BOOT/"
 fi
 
 # -----------------------------

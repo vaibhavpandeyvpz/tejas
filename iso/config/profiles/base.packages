@@ -2,6 +2,7 @@
 casper
 lightdm
 linux-generic
+netplan.io
 network-manager
 network-manager-config-connectivity-ubuntu
 rfkill
