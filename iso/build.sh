@@ -99,9 +99,14 @@ echo "[6/19] Create local APT repository"
 mkdir -p iso/image/pool/main
 sudo cp $ROOTFS/var/cache/apt/archives/*.deb iso/image/pool/main/
 
-mkdir -p iso/image/dists/$DISTRO/main/binary-amd64
-apt-ftparchive packages iso/image/pool > iso/image/dists/$DISTRO/main/binary-amd64/Packages
-gzip -9 iso/image/dists/$DISTRO/main/binary-amd64/Packages
+PRWD=$(pwd)
+cd "$IMAGE"
+
+mkdir -p dists/$DISTRO/main/binary-amd64
+apt-ftparchive \
+  -o APT::FTPArchive::Packages::Compress=false \
+  packages pool/main > dists/$DISTRO/main/binary-amd64/Packages
+gzip -9 dists/$DISTRO/main/binary-amd64/Packages
 
 apt-ftparchive \
   -o APT::FTPArchive::Release::Origin="Tejas Linux" \
@@ -110,7 +115,9 @@ apt-ftparchive \
   -o APT::FTPArchive::Release::Codename="$DISTRO" \
   -o APT::FTPArchive::Release::Components="main" \
   -o APT::FTPArchive::Release::Architectures="amd64" \
-  release iso/image > iso/image/dists/$DISTRO/Release
+  release . > dists/$DISTRO/Release
+
+cd "$PRWD"
 
 # -----------------------------
 # 7. Create apt-cdrom metadata

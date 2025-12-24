@@ -2,6 +2,7 @@
 set -e
 
 cat > /etc/locale.gen <<EOF
+en_IN.UTF-8 UTF-8
 en_US.UTF-8 UTF-8
 en_GB.UTF-8 UTF-8
 
@@ -18,7 +19,7 @@ ur_IN.UTF-8 UTF-8
 EOF
 
 locale-gen
-update-locale LANG=en_US.UTF-8
+update-locale LANG=en_IN.UTF-8
 
 apt purge -y \
   language-pack-* \
