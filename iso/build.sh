@@ -41,7 +41,7 @@ fi
 # -----------------------------
 # 1. Bootstrap root filesystem
 # -----------------------------
-echo "[1/18] Bootstrap root filesystem"
+echo "[1/19] Bootstrap root filesystem"
 echo "[INFO] This may take several minutes..."
 sudo debootstrap \
   --arch="$ARCH" \
@@ -52,11 +52,11 @@ sudo debootstrap \
 # -----------------------------
 # 2. Configure APT repositories
 # -----------------------------
-echo "[2/18] Configure APT repositories"
+echo "[2/19] Configure APT repositories"
 cat <<EOF | sudo tee "$ROOTFS/etc/apt/sources.list"
 deb $MIRROR $DISTRO main restricted universe multiverse
-deb $MIRROR $DISTRO-updates main restricted universe multiverse
 deb $MIRROR $DISTRO-security main restricted universe multiverse
+deb $MIRROR $DISTRO-updates main restricted universe multiverse
 EOF
 
 sudo chroot "$ROOTFS" apt update
@@ -64,7 +64,7 @@ sudo chroot "$ROOTFS" apt update
 # -----------------------------
 # 3. Mount virtual filesystems
 # -----------------------------
-echo "[3/18] Mount system directories"
+echo "[3/19] Mount system directories"
 sudo mount --bind /dev "$ROOTFS/dev"
 sudo mount --bind /dev/pts "$ROOTFS/dev/pts"
 sudo mount --bind /proc "$ROOTFS/proc"
@@ -73,7 +73,7 @@ sudo mount --bind /sys "$ROOTFS/sys"
 trap 'sudo umount -lf "$ROOTFS/dev/pts" "$ROOTFS/dev" "$ROOTFS/proc" "$ROOTFS/sys" 2>/dev/null || true' EXIT
 
 # Configure debconf for non-interactive installation (temporary, for build only)
-echo "[4/18] Configure debconf for non-interactive mode (build-time only)"
+echo "[4/19] Configure debconf for non-interactive mode (build-time only)"
 echo 'debconf debconf/frontend select Noninteractive' | sudo chroot "$ROOTFS" debconf-set-selections
 echo 'console-setup console-setup/charmap47 select UTF-8' | sudo chroot "$ROOTFS" debconf-set-selections
 echo 'console-setup console-setup/codeset47 select Lat15' | sudo chroot "$ROOTFS" debconf-set-selections
@@ -86,7 +86,7 @@ sudo chroot "$ROOTFS" apt clean || true
 # -----------------------------
 # 5. Install offline packages
 # -----------------------------
-echo "[5/18] Install offline packages"
+echo "[5/19] Install offline packages"
 sudo chroot "$ROOTFS" sh -c 'echo "APT::Keep-Downloaded-Packages \"true\";" > /etc/apt/apt.conf.d/99-keep-debs'
 OFFLINE_PKGS=$(grep -Ev '^\s*#|^\s*$' iso/config/profiles/offline.packages)
 sudo chroot "$ROOTFS" apt-get install -y $OFFLINE_PKGS
@@ -95,7 +95,7 @@ sudo chroot "$ROOTFS" rm -f /etc/apt/apt.conf.d/99-keep-debs
 # -----------------------------
 # 6. Create APT repository
 # -----------------------------
-echo "[6/18] Create local APT repository"
+echo "[6/19] Create local APT repository"
 mkdir -p iso/image/pool/main
 sudo cp $ROOTFS/var/cache/apt/archives/*.deb iso/image/pool/main/
 
@@ -108,7 +108,7 @@ apt-ftparchive release iso/image/dists/$DISTRO > iso/image/dists/$DISTRO/Release
 # -----------------------------
 # 7. Create apt-cdrom metadata
 # -----------------------------
-echo "[7/18] Create CD-ROM metadata for apt-cdrom"
+echo "[7/19] Create CD-ROM metadata for apt-cdrom"
 mkdir -p iso/image/.disk
 echo "Tejas Linux $VERSION ($PROFILE edition)" > iso/image/.disk/info
 echo "main" > iso/image/.disk/base_components
@@ -117,27 +117,27 @@ echo "install" > iso/image/.disk/cd_type
 # -----------------------------
 # 8. Install base packages
 # -----------------------------
-echo "[8/18] Install base packages"
+echo "[8/19] Install base packages"
 BASE_PKGS=$(grep -Ev '^\s*#|^\s*$' iso/config/profiles/base.packages)
-sudo chroot "$ROOTFS" apt install -y $BASE_PKGS
+sudo chroot "$ROOTFS" apt-get install -y $BASE_PKGS
 
 # -----------------------------
 # 9. Apply rootfs overlay
 # -----------------------------
-echo "[9/18] Copy rootfs overlay"
+echo "[9/19] Copy rootfs overlay"
 sudo rsync -a iso/config/rootfs/ "$ROOTFS/"
 
 # -----------------------------
 # 10. Install profile packages
 # -----------------------------
-echo "[10/18] Install $PROFILE packages"
+echo "[10/19] Install $PROFILE packages"
 PROFILE_PKGS=$(grep -Ev '^\s*#|^\s*$' "iso/config/profiles/$PROFILE.packages")
-sudo chroot "$ROOTFS" apt install -y $PROFILE_PKGS
+sudo chroot "$ROOTFS" apt-get install -y $PROFILE_PKGS
 
 # -----------------------------
 # 11. Run hooks
 # -----------------------------
-echo "[11/18] Run chroot hooks"
+echo "[11/19] Run chroot hooks"
 echo "$PROFILE" | sudo tee "$ROOTFS/etc/tejas-profile"
 
 for hook in iso/config/hooks/*.sh; do
@@ -149,26 +149,36 @@ done
 # -----------------------------
 # 12. Reset debconf settings
 # -----------------------------
-echo "[12/18] Clearing build-time debconf settings"
+echo "[12/19] Clearing build-time debconf settings"
 # Remove debconf cache - it will be recreated fresh when packages need it
 # This ensures no build-time debconf settings persist to live/installed system
 sudo rm -rf "$ROOTFS/var/cache/debconf" 2>/dev/null || true
 sudo mkdir -p "$ROOTFS/var/cache/debconf" 2>/dev/null || true
 
 # -----------------------------
-# 13. Generate filesystem manifest
+# 13. Fix internet connectivity
 # -----------------------------
-echo "[13/18] Generate filesystem manifest"
+echo "[13/19] Configure live networking"
+sudo chroot "$ROOTFS" rm -f /etc/resolv.conf
+sudo chroot "$ROOTFS" ln -s /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+sudo chroot "$ROOTFS" systemctl enable NetworkManager systemd-resolved
+
+# -----------------------------
+# 14. Generate filesystem manifest
+# -----------------------------
+echo "[14/19] Generate filesystem manifest"
 sudo chroot "$ROOTFS" dpkg-query -W \
   --showformat='${Package} ${Version}\n' \
   | sudo tee "$IMAGE/casper/filesystem.manifest"
 
 # -----------------------------
-# 14. Copy kernel and initrd
+# 15. Copy kernel and initrd
 # -----------------------------
-echo "[14/18] Copy kernel and initrd"
-sudo cp "$ROOTFS"/boot/vmlinuz-* "$IMAGE/casper/vmlinuz"
-sudo cp "$ROOTFS"/boot/initrd.img-* "$IMAGE/casper/initrd"
+echo "[15/19] Copy kernel and initrd"
+KERNEL=$(ls "$ROOTFS"/boot/vmlinuz-* | sort | tail -1)
+INITRD=$(ls "$ROOTFS"/boot/initrd.img-* | sort | tail -1)
+sudo cp "$KERNEL" "$IMAGE/casper/vmlinuz"
+sudo cp "$INITRD" "$IMAGE/casper/initrd"
 
 # Clean APT cache to free space
 echo "[DEBUG] Cleaning APT cache"
@@ -176,18 +186,18 @@ sudo chroot "$ROOTFS" apt clean || true
 sudo chroot "$ROOTFS" rm -rf /var/lib/apt/lists/* || true
 
 # -----------------------------
-# 15. Unmount virtual filesystems
+# 16. Unmount virtual filesystems
 # -----------------------------
-echo "[15/18] Unmount virtual filesystems"
+echo "[16/19] Unmount virtual filesystems"
 sudo umount -lf "$ROOTFS/dev/pts" || true
 sudo umount -lf "$ROOTFS/dev" || true
 sudo umount -lf "$ROOTFS/proc" || true
 sudo umount -lf "$ROOTFS/sys" || true
 
 # -----------------------------
-# 16. Create squashfs
+# 17. Create squashfs
 # -----------------------------
-echo "[16/18] Create squashfs"
+echo "[17/19] Create squashfs"
 sudo mksquashfs \
   "$ROOTFS" \
   "$IMAGE/casper/filesystem.squashfs" \
@@ -195,27 +205,27 @@ sudo mksquashfs \
   -comp zstd
 
 # -----------------------------
-# 17. Install Secure Boot EFI binaries
+# 18. Install Secure Boot EFI binaries
 # -----------------------------
-echo "[17/18] Install Secure Boot EFI binaries"
+echo "[18/19] Install Secure Boot EFI binaries"
 
 # Microsoft-signed shim
-sudo cp /usr/lib/shim/shimx64.efi.signed \
+sudo cp $ROOTFS/usr/lib/shim/shimx64.efi.signed \
   "$IMAGE/EFI/BOOT/BOOTX64.EFI"
 
 # Canonical-signed GRUB
-sudo cp /usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed \
+sudo cp $ROOTFS/usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed \
   "$IMAGE/EFI/BOOT/grubx64.efi"
 
 # Optional MOK manager
-if [ -f /usr/lib/shim/mmx64.efi ]; then
-  sudo cp /usr/lib/shim/mmx64.efi "$IMAGE/EFI/BOOT/"
+if [ -f $ROOTFS/usr/lib/shim/mmx64.efi ]; then
+  sudo cp $ROOTFS/usr/lib/shim/mmx64.efi "$IMAGE/EFI/BOOT/"
 fi
 
 # -----------------------------
-# 18. Create ISO (BIOS + UEFI)
+# 19. Create ISO (BIOS + UEFI)
 # -----------------------------
-echo "[18/18] Create ISO"
+echo "[19/19] Create ISO"
 mkdir -p "$OUT"
 grub-mkrescue \
   -o "$OUT/tejas-linux-$VERSION-$PROFILE-amd64.iso" \

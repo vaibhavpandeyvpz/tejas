@@ -5,10 +5,8 @@ RUN apt update && \
     apt install -y --no-install-recommends \
     apt-utils \
     debootstrap \
-    grub-efi-amd64-signed \
     mtools \
     rsync \
-    shim-signed \
     squashfs-tools \
     sudo \
     xorriso \

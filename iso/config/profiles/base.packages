@@ -1,9 +1,14 @@
 # Core
 casper
+casper-networking
 lightdm
 linux-generic
 network-manager
+network-manager-config-connectivity-ubuntu
+rfkill
+systemd-resolved
 ubuntu-standard
+wpasupplicant
 xfce4
 xfce4-terminal
 
