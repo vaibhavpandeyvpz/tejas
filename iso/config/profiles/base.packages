@@ -10,7 +10,6 @@ systemd-resolved
 ubuntu-standard
 wpasupplicant
 xfce4
-xfce4-terminal
 
 # Installer
 calamares
@@ -32,3 +31,4 @@ orage
 ristretto
 sylpheed
 vlc
+xfce4-terminal
