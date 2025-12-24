@@ -27,7 +27,7 @@ Tejas Linux is designed for users who value:
   - Legacy BIOS
 
 - Secure Boot enabled by default (no custom keys or enrollment)
-- Two editions: User and Developer
+- Two editions: User and Pro
 - Calamares graphical installer
 - CI-built ISOs using GitHub Actions
 - GPG-signed releases
@@ -39,10 +39,10 @@ Tejas Linux is designed for users who value:
 
 Tejas Linux is published in two editions built from the same base system.
 
-| Edition   | Intended for             | Differences                          |
-| --------- | ------------------------ | ------------------------------------ |
-| User      | General users            | Minimal system, no dev tools or docs |
-| Developer | Developers / power users | Compilers, headers, man pages        |
+| Edition | Intended for             | Differences                          |
+| ------- | ------------------------ | ------------------------------------ |
+| User    | General users            | Minimal system, no dev tools or docs |
+| Pro     | Developers / power users | Compilers, headers, man pages        |
 
 Both editions share:
 
@@ -312,8 +312,8 @@ Docker provides an isolated build environment that works on any Linux distributi
 # Build User Edition
 ./docker-build.sh user
 
-# Build Developer Edition
-./docker-build.sh developer
+# Build Pro Edition
+./docker-build.sh pro
 ```
 
 **Option B: Manual Docker commands:**
@@ -336,14 +336,14 @@ Docker provides an isolated build environment that works on any Linux distributi
      sudo /workspace/iso/build.sh
    ```
 
-3. **Build Developer Edition:**
+3. **Build Pro Edition:**
 
    ```bash
    mkdir -p iso/out
    docker run --rm --privileged \
      -v "$(pwd)/iso/out:/workspace/iso/out" \
      -w /workspace \
-     -e PROFILE=developer \
+     -e PROFILE=pro \
      tejas-builder \
      sudo /workspace/iso/build.sh
    ```
@@ -361,7 +361,7 @@ The built ISO will be available in `iso/out/`:
 ```
 iso/out/
 ├── tejas-linux-<version>-user-amd64.iso
-└── tejas-linux-<version>-developer-amd64.iso
+└── tejas-linux-<version>-pro-amd64.iso
 ```
 
 ---
@@ -411,8 +411,8 @@ Windows users have two options for building Tejas Linux:
    # Build User Edition
    .\docker-build.ps1 user
 
-   # Build Developer Edition
-   .\docker-build.ps1 developer
+   # Build Pro Edition
+   .\docker-build.ps1 pro
    ```
 
    **Note:** If you encounter an execution policy error, run:
@@ -444,11 +444,11 @@ Windows users have two options for building Tejas Linux:
      tejas-builder `
      sudo /workspace/iso/build.sh
 
-   # Build Developer Edition
+   # Build Pro Edition
    docker run --rm --privileged `
      -v "${PWD}\iso\out:/workspace/iso/out" `
      -w /workspace `
-     -e PROFILE=developer `
+     -e PROFILE=pro `
      tejas-builder `
      sudo /workspace/iso/build.sh
    ```
@@ -505,10 +505,10 @@ sudo apt install -y \
 PROFILE=user sudo iso/build.sh
 ```
 
-#### Build Developer Edition
+#### Build Pro Edition
 
 ```bash
-PROFILE=developer sudo iso/build.sh
+PROFILE=pro sudo iso/build.sh
 ```
 
 **Output:**
@@ -516,7 +516,7 @@ PROFILE=developer sudo iso/build.sh
 ```
 iso/out/
 ├── tejas-linux-<version>-user-amd64.iso
-└── tejas-linux-<version>-developer-amd64.iso
+└── tejas-linux-<version>-pro-amd64.iso
 ```
 
 ---
@@ -620,7 +620,7 @@ Tejas Linux ISOs are built automatically using GitHub Actions.
 Each CI run produces:
 
 - User edition ISO
-- Developer edition ISO
+- Pro edition ISO
 - SHA256 checksums
 - GPG signatures
 
@@ -648,7 +648,7 @@ iso/
 │   │       ├── apt/trusted.gpg.d/  # GPG key for repository signing
 │   │       └── calamares/          # Installer configuration
 │   ├── hooks/           # Build-time customization scripts
-│   └── profiles/        # Package lists (base, user, developer, offline)
+│   └── profiles/        # Package lists (base, user, pro, offline)
 ├── image/
 │   ├── EFI/BOOT/        # Secure Boot EFI binaries
 │   ├── boot/grub/       # GRUB configuration

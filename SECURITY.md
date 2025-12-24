@@ -24,7 +24,7 @@ Please include:
 
 - A clear description of the vulnerability
 - Steps to reproduce (if applicable)
-- Affected versions / editions (User / Developer)
+- Affected versions / editions (User / Pro)
 - Any relevant logs, screenshots, or proof-of-concept code
 
 ---

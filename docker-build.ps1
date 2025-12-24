@@ -1,9 +1,9 @@
 # PowerShell helper script to build Tejas Linux using Docker on Windows
-# Usage: .\docker-build.ps1 [user|developer]
+# Usage: .\docker-build.ps1 [user|pro]
 
 param(
     [Parameter(Position=0)]
-    [ValidateSet("user", "developer")]
+    [ValidateSet("user", "pro")]
     [string]$BuildProfile = "user"
 )
 

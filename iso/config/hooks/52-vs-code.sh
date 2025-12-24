@@ -3,8 +3,8 @@ set -e
 
 PROFILE=$(cat /etc/tejas-profile 2>/dev/null || echo user)
 
-# Only install for Developer edition
-if [ "$PROFILE" != "developer" ]; then
+# Only install for Pro edition
+if [ "$PROFILE" != "pro" ]; then
   exit 0
 fi
 

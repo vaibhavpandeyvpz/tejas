@@ -2,13 +2,13 @@
 set -euo pipefail
 
 # Helper script to build Tejas Linux using Docker
-# Usage: ./docker-build.sh [user|developer]
+# Usage: ./docker-build.sh [user|pro]
 
 PROFILE=${1:-user}
 
-if [[ ! "$PROFILE" =~ ^(user|developer)$ ]]; then
-  echo "Error: Profile must be 'user' or 'developer'" >&2
-  echo "Usage: $0 [user|developer]" >&2
+if [[ ! "$PROFILE" =~ ^(user|pro)$ ]]; then
+  echo "Error: Profile must be 'user' or 'pro'" >&2
+  echo "Usage: $0 [user|pro]" >&2
   exit 1
 fi
 
