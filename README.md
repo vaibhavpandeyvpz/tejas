@@ -485,7 +485,9 @@ sudo apt install -y \
   apt-utils \
   debootstrap \
   gnupg \
+  grub-common \
   grub-efi-amd64-signed \
+  grub-pc-bin \
   mtools \
   rsync \
   shim-signed \
