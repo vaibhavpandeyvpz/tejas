@@ -1,0 +1,112 @@
+name: Build ISO
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        profile: [user, pro]
+
+    env:
+      DISTRO: noble
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ----------------------------
+      # Versioning
+      # ----------------------------
+      - name: Generate build version
+        id: version
+        run: |
+          DATE=$(date +%Y.%m.%d)
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          VERSION="${DATE}-${SHORT_SHA}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      # ----------------------------
+      # Free disk space (important)
+      # ----------------------------
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/lib/android
+          sudo apt clean
+
+      # ----------------------------
+      # Install build dependencies
+      # ----------------------------
+      - name: Install ISO build dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y --no-install-recommends \
+            apt-utils \
+            debootstrap \
+            gnupg \
+            grub-common \
+            grub-efi-amd64-signed \
+            grub-pc-bin \
+            mtools \
+            rsync \
+            shim-signed \
+            squashfs-tools \
+            xorriso
+
+      # ----------------------------
+      # Build ISO
+      # ----------------------------
+      - name: Build ${{ matrix.profile }} ISO
+        env:
+          PROFILE: ${{ matrix.profile }}
+        run: |
+          sudo PROFILE=${PROFILE} iso/build.sh
+          sudo chown -R $USER:$USER iso/out
+
+      # ----------------------------
+      # Rename + checksum
+      # ----------------------------
+      - name: Prepare artifacts
+        run: |
+          mkdir -p dist
+          ISO=$(ls iso/out/*.iso | head -n1)
+          NAME="tejas-linux-${{ env.DISTRO }}-${{ matrix.profile }}-${{ steps.version.outputs.version }}-amd64.iso"
+          mv "$ISO" "dist/$NAME"
+          sha256sum "dist/$NAME" > "dist/$NAME.sha256"
+
+      # ----------------------------
+      # Import GPG key
+      # ----------------------------
+      - name: Import GPG key
+        run: |
+          echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+
+      # ----------------------------
+      # Sign ISO and checksums
+      # ----------------------------
+      - name: GPG sign artifacts
+        run: |
+          cd dist
+          for f in *.iso *.sha256; do
+            gpg --batch --yes --pinentry-mode loopback \
+                --passphrase "${{ secrets.GPG_PASSPHRASE }}" \
+                --detach-sign "$f"
+          done
+
+      # ----------------------------
+      # Upload artifacts
+      # ----------------------------
+      - name: Upload ISO artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: tejas-linux-${{ matrix.profile }}
+          path: dist/*

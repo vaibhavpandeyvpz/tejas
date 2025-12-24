@@ -1,0 +1,34 @@
+# Core
+casper
+lightdm
+linux-generic
+netplan.io
+network-manager
+network-manager-config-connectivity-ubuntu
+rfkill
+systemd-resolved
+ubuntu-standard
+wpasupplicant
+xfce4
+xfce4-terminal
+
+# Installer
+calamares
+calamares-settings-ubuntu-common
+os-prober
+rsync
+
+# System utils
+apt-transport-https
+curl
+gpg
+snapd
+wget
+
+# Userland apps
+catfish
+libreoffice
+orage
+ristretto
+sylpheed
+vlc

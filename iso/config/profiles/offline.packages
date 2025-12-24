@@ -1,0 +1,7 @@
+# Secure Boot
+efibootmgr
+grub-common
+grub-efi-amd64-signed
+grub-efi-amd64-bin
+grub2-common
+shim-signed

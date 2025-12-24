@@ -1,0 +1,11 @@
+NAME="Tejas Linux"
+ID=tejas
+ID_LIKE=ubuntu
+PRETTY_NAME="Tejas Linux 24.04"
+VERSION="24.04 (Noble)"
+VERSION_ID="24.04"
+VERSION_CODENAME=noble
+UBUNTU_CODENAME=noble
+HOME_URL="https://github.com/vaibhavpandeyvpz/tejas"
+SUPPORT_URL="https://github.com/vaibhavpandeyvpz/tejas/issues"
+BUG_REPORT_URL="https://github.com/vaibhavpandeyvpz/tejas/issues"

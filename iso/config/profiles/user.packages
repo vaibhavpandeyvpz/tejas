@@ -1,0 +1,12 @@
+# User edition is intentionally minimal
+
+# Build tools
+build-essential-
+
+# Docs & manpages
+info-
+man-db-
+manpages-
+
+# Userland apps
+mousepad
