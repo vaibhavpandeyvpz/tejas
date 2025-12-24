@@ -47,20 +47,15 @@ jobs:
       - name: Install ISO build dependencies
         run: |
           sudo apt update
-          sudo apt install -y \
+          sudo apt install -y --no-install-recommends \
+            apt-utils \
             debootstrap \
-            squashfs-tools \
-            xorriso \
-            grub-efi-amd64-bin \
             grub-efi-amd64-signed \
-            grub-common \
-            shim-signed \
-            sbsigntool \
-            casper \
+            mtools \
             rsync \
-            calamares \
-            os-prober \
-            mtools
+            shim-signed \
+            squashfs-tools \
+            xorriso
 
       # ----------------------------
       # Build ISO

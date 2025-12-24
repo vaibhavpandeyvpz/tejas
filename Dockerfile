@@ -1,24 +1,17 @@
 FROM ubuntu:noble
 
 # Install all build dependencies
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+RUN apt update && \
+    apt install -y --no-install-recommends \
+    apt-utils \
     debootstrap \
-    squashfs-tools \
-    xorriso \
-    grub-efi-amd64-bin \
     grub-efi-amd64-signed \
-    grub-pc-bin \
-    grub-common \
-    shim-signed \
-    casper \
-    calamares \
     mtools \
     rsync \
+    shim-signed \
+    squashfs-tools \
     sudo \
-    bash \
-    grep \
-    coreutils \
+    xorriso \
     && rm -rf /var/lib/apt/lists/*
 
 # Create a build user with sudo access (no password required)

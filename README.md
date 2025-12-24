@@ -488,16 +488,19 @@ You can test the built ISO locally using QEMU before deploying to real hardware.
 Install QEMU and OVMF firmware:
 
 **On Ubuntu/Debian:**
+
 ```bash
 sudo apt install -y qemu-system-x86 ovmf
 ```
 
 **On macOS (Homebrew):**
+
 ```bash
 brew install qemu
 ```
 
 **On Fedora/RHEL:**
+
 ```bash
 sudo dnf install -y qemu-system-x86 edk2-ovmf
 ```

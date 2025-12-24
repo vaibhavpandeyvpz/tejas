@@ -41,7 +41,7 @@ fi
 # -----------------------------
 # 1. Bootstrap root filesystem
 # -----------------------------
-echo "[1/13] Bootstrap root filesystem"
+echo "[1/14] Bootstrap root filesystem"
 echo "[INFO] This may take several minutes..."
 sudo debootstrap \
   --arch="$ARCH" \
@@ -52,7 +52,7 @@ sudo debootstrap \
 # -----------------------------
 # 2. Configure APT repositories
 # -----------------------------
-echo "[2/13] Configure APT repositories"
+echo "[2/14] Configure APT repositories"
 cat <<EOF | sudo tee "$ROOTFS/etc/apt/sources.list"
 deb $MIRROR $DISTRO main restricted universe multiverse
 deb $MIRROR $DISTRO-updates main restricted universe multiverse
@@ -64,45 +64,68 @@ sudo chroot "$ROOTFS" apt update
 # -----------------------------
 # 3. Mount virtual filesystems
 # -----------------------------
-echo "[3/13] Mount system directories"
-sudo mount --bind /dev       "$ROOTFS/dev"
-sudo mount --bind /dev/pts   "$ROOTFS/dev/pts"
-sudo mount --bind /proc      "$ROOTFS/proc"
-sudo mount --bind /sys       "$ROOTFS/sys"
+echo "[3/14] Mount system directories"
+sudo mount --bind /dev "$ROOTFS/dev"
+sudo mount --bind /dev/pts "$ROOTFS/dev/pts"
+sudo mount --bind /proc "$ROOTFS/proc"
+sudo mount --bind /sys "$ROOTFS/sys"
 
 trap 'sudo umount -lf "$ROOTFS/dev/pts" "$ROOTFS/dev" "$ROOTFS/proc" "$ROOTFS/sys" 2>/dev/null || true' EXIT
 
 # Configure debconf for non-interactive installation (temporary, for build only)
-echo "[3.5/13] Configure debconf for non-interactive mode (build-time only)"
+echo "[3.5/14] Configure debconf for non-interactive mode (build-time only)"
 echo 'debconf debconf/frontend select Noninteractive' | sudo chroot "$ROOTFS" debconf-set-selections
 echo 'console-setup console-setup/charmap47 select UTF-8' | sudo chroot "$ROOTFS" debconf-set-selections
 echo 'console-setup console-setup/codeset47 select Lat15' | sudo chroot "$ROOTFS" debconf-set-selections
 echo 'console-setup console-setup/fontsize-fb47 text 16' | sudo chroot "$ROOTFS" debconf-set-selections
 
+# Clean APT cache to free space
+echo "[CLEAN] Cleaning APT cache"
+sudo chroot "$ROOTFS" apt clean || true
+
 # -----------------------------
-# 4. Install base packages
+# 4. Install offline packages
 # -----------------------------
-echo "[4/13] Install base packages"
+echo "[4/14] Install offline packages"
+sudo chroot "$ROOTFS" sh -c 'echo "APT::Keep-Downloaded-Packages \"true\";" > /etc/apt/apt.conf.d/99-keep-debs'
+OFFLINE_PKGS=$(grep -Ev '^\s*#|^\s*$' iso/config/profiles/offline.packages)
+sudo chroot "$ROOTFS" apt-get install -y $OFFLINE_PKGS
+sudo chroot "$ROOTFS" rm -f /etc/apt/apt.conf.d/99-keep-debs
+
+# Create APT repository structure
+mkdir -p iso/image/pool/main
+sudo cp $ROOTFS/var/cache/apt/archives/*.deb iso/image/pool/main/
+
+mkdir -p iso/image/dists/$DISTRO/main/binary-amd64
+apt-ftparchive packages iso/image/pool > iso/image/dists/$DISTRO/main/binary-amd64/Packages
+gzip -9 iso/image/dists/$DISTRO/main/binary-amd64/Packages
+
+apt-ftparchive release iso/image/dists/$DISTRO > iso/image/dists/$DISTRO/Release
+
+# -----------------------------
+# 5. Install base packages
+# -----------------------------
+echo "[5/14] Install base packages"
 BASE_PKGS=$(grep -Ev '^\s*#|^\s*$' iso/config/profiles/base.packages)
 sudo chroot "$ROOTFS" apt install -y $BASE_PKGS
 
 # -----------------------------
-# 5. Apply rootfs overlay
+# 6. Apply rootfs overlay
 # -----------------------------
-echo "[5/13] Copy rootfs overlay"
+echo "[6/14] Copy rootfs overlay"
 sudo rsync -a iso/config/rootfs/ "$ROOTFS/"
 
 # -----------------------------
-# 6. Install profile packages
+# 7. Install profile packages
 # -----------------------------
-echo "[6/13] Install $PROFILE packages"
+echo "[7/14] Install $PROFILE packages"
 PROFILE_PKGS=$(grep -Ev '^\s*#|^\s*$' "iso/config/profiles/$PROFILE.packages")
 sudo chroot "$ROOTFS" apt install -y $PROFILE_PKGS
 
 # -----------------------------
-# 7. Run hooks
+# 8. Run hooks
 # -----------------------------
-echo "[7/13] Run chroot hooks"
+echo "[8/14] Run chroot hooks"
 echo "$PROFILE" | sudo tee "$ROOTFS/etc/tejas-profile"
 
 for hook in iso/config/hooks/*.sh; do
@@ -112,40 +135,45 @@ for hook in iso/config/hooks/*.sh; do
 done
 
 # Clear build-time debconf settings so they don't propagate to live/installed system
-echo "[7.5/13] Clearing build-time debconf settings"
+echo "[8.5/14] Clearing build-time debconf settings"
 # Remove debconf cache - it will be recreated fresh when packages need it
 # This ensures no build-time debconf settings persist to live/installed system
 sudo rm -rf "$ROOTFS/var/cache/debconf" 2>/dev/null || true
 sudo mkdir -p "$ROOTFS/var/cache/debconf" 2>/dev/null || true
 
 # -----------------------------
-# 8. Generate filesystem manifest
+# 9. Generate filesystem manifest
 # -----------------------------
-echo "[8/13] Generate filesystem manifest"
+echo "[9/14] Generate filesystem manifest"
 sudo chroot "$ROOTFS" dpkg-query -W \
   --showformat='${Package} ${Version}\n' \
   | sudo tee "$IMAGE/casper/filesystem.manifest"
 
 # -----------------------------
-# 9. Copy kernel and initrd
+# 10. Copy kernel and initrd
 # -----------------------------
-echo "[9/13] Copy kernel and initrd"
-sudo cp "$ROOTFS"/boot/vmlinuz-*    "$IMAGE/casper/vmlinuz"
+echo "[10/14] Copy kernel and initrd"
+sudo cp "$ROOTFS"/boot/vmlinuz-* "$IMAGE/casper/vmlinuz"
 sudo cp "$ROOTFS"/boot/initrd.img-* "$IMAGE/casper/initrd"
 
-# -----------------------------
-# 10. Unmount virtual filesystems
-# -----------------------------
-echo "[10/13] Unmount virtual filesystems"
-sudo umount -lf "$ROOTFS/dev/pts" || true
-sudo umount -lf "$ROOTFS/dev"     || true
-sudo umount -lf "$ROOTFS/proc"    || true
-sudo umount -lf "$ROOTFS/sys"     || true
+# Clean APT cache to free space
+echo "[CLEAN] Cleaning APT cache"
+sudo chroot "$ROOTFS" apt clean || true
+sudo chroot "$ROOTFS" rm -rf /var/lib/apt/lists/* || true
 
 # -----------------------------
-# 11. Create squashfs
+# 11. Unmount virtual filesystems
 # -----------------------------
-echo "[11/13] Create squashfs"
+echo "[11/14] Unmount virtual filesystems"
+sudo umount -lf "$ROOTFS/dev/pts" || true
+sudo umount -lf "$ROOTFS/dev" || true
+sudo umount -lf "$ROOTFS/proc" || true
+sudo umount -lf "$ROOTFS/sys" || true
+
+# -----------------------------
+# 12. Create squashfs
+# -----------------------------
+echo "[12/14] Create squashfs"
 sudo mksquashfs \
   "$ROOTFS" \
   "$IMAGE/casper/filesystem.squashfs" \
@@ -153,9 +181,9 @@ sudo mksquashfs \
   -comp zstd
 
 # -----------------------------
-# 12. Install Secure Boot EFI binaries
+# 13. Install Secure Boot EFI binaries
 # -----------------------------
-echo "[12/13] Install Secure Boot EFI binaries"
+echo "[13/14] Install Secure Boot EFI binaries"
 
 # Microsoft-signed shim
 sudo cp /usr/lib/shim/shimx64.efi.signed \
@@ -171,9 +199,9 @@ if [ -f /usr/lib/shim/mmx64.efi ]; then
 fi
 
 # -----------------------------
-# 13. Create ISO (BIOS + UEFI)
+# 14. Create ISO (BIOS + UEFI)
 # -----------------------------
-echo "[13/13] Create ISO"
+echo "[14/14] Create ISO"
 mkdir -p "$OUT"
 grub-mkrescue \
   -o "$OUT/tejas-linux-$VERSION-$PROFILE-amd64.iso" \

@@ -13,10 +13,6 @@ calamares-settings-ubuntu-common
 os-prober
 rsync
 
-# Secure Boot
-grub-efi-amd64-signed
-shim-signed
-
 # System utils
 apt-transport-https
 curl
