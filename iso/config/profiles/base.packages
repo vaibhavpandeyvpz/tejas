@@ -20,6 +20,10 @@ gpg
 wget
 
 # Userland apps
+catfish
 libreoffice
+mousepad
+orage
+ristretto
 thunderbird
 vlc
