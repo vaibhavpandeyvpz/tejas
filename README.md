@@ -89,8 +89,9 @@ Works on Linux, macOS, and Windows:
 
 ```bash
 # Install dependencies
-sudo apt install -y apt-utils debootstrap gnupg grub-efi-amd64-signed \
-  mtools rsync shim-signed squashfs-tools xorriso
+sudo apt install -y apt-utils debootstrap gnupg grub-common \
+  grub-efi-amd64-signed grub-pc-bin mtools rsync shim-signed \
+  squashfs-tools xorriso
 
 # Build
 PROFILE=user sudo iso/build.sh
