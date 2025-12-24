@@ -5,6 +5,7 @@ RUN apt update && \
     apt install -y --no-install-recommends \
     apt-utils \
     debootstrap \
+    gnupg \
     grub-efi-amd64-signed \
     mtools \
     rsync \

@@ -108,6 +108,17 @@ apt-ftparchive \
   packages pool/main > dists/$DISTRO/main/binary-amd64/Packages
 gzip -9 dists/$DISTRO/main/binary-amd64/Packages
 
+# Generate GPG key for signing the release
+gpg --batch --passphrase '' --quick-generate-key \
+  "Tejas Linux ISO <tejas.linux@vaibhavpandey.com>" \
+  rsa2048 sign 0
+
+# Export public key and add to rootfs
+KEY_ID=$(gpg --batch --list-keys --with-colons "Tejas Linux ISO" | grep "^pub" | cut -d: -f5)
+mkdir -p $ROOTFS/etc/apt/trusted.gpg.d
+gpg --batch --export "$KEY_ID" > $ROOTFS/etc/apt/trusted.gpg.d/tejas-iso.gpg
+
+# Sign the release
 apt-ftparchive \
   -o APT::FTPArchive::Release::Origin="Tejas Linux" \
   -o APT::FTPArchive::Release::Label="Tejas Linux" \
@@ -115,7 +126,9 @@ apt-ftparchive \
   -o APT::FTPArchive::Release::Codename="$DISTRO" \
   -o APT::FTPArchive::Release::Components="main" \
   -o APT::FTPArchive::Release::Architectures="amd64" \
-  release . > dists/$DISTRO/Release
+  release . \
+  | gpg --batch --yes --clearsign \
+  -o dists/$DISTRO/InRelease
 
 cd "$PRWD"
 
