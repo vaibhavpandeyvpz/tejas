@@ -27,8 +27,7 @@ docker run --rm --privileged \
   --platform linux/amd64 \
   -v "$(pwd)/iso/out:/workspace/iso/out" \
   -w /workspace \
-  -e PROFILE="$PROFILE" \
   tejas-builder \
-  sudo /workspace/iso/build.sh
+  sudo PROFILE="$PROFILE" /workspace/iso/build.sh
 
 echo "[DONE] Build complete! Check iso/out/ for the ISO file."

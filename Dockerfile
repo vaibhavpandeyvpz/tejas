@@ -32,7 +32,6 @@ USER builder
 
 # Set environment variables
 ENV DEBIAN_FRONTEND=noninteractive
-ENV PROFILE=user
 
 # Default command
 CMD ["/bin/bash"]

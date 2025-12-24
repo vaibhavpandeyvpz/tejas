@@ -49,9 +49,8 @@ if (-not (Test-Path $outDir)) {
 docker run --rm --privileged `
     -v "${outDir}:/workspace/iso/out" `
     -w /workspace `
-    -e PROFILE="$BuildProfile" `
     tejas-builder `
-    sudo /workspace/iso/build.sh
+    sudo PROFILE=$BuildProfile /workspace/iso/build.sh
 
 if ($LASTEXITCODE -eq 0) {
     Write-Host "[DONE] Build complete! Check iso\out\ for the ISO file." -ForegroundColor Green
