@@ -26,9 +26,8 @@ wget
 
 # Userland apps
 catfish
+evolution
 libreoffice
-mousepad
 orage
 ristretto
-thunderbird
 vlc

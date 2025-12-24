@@ -7,3 +7,6 @@ build-essential-
 info-
 man-db-
 manpages-
+
+# Userland apps
+mousepad

@@ -41,7 +41,7 @@ fi
 # -----------------------------
 # 1. Bootstrap root filesystem
 # -----------------------------
-echo "[1/19] Bootstrap root filesystem"
+echo "[1/20] Bootstrap root filesystem"
 echo "[INFO] This may take several minutes..."
 sudo debootstrap \
   --arch="$ARCH" \
@@ -52,7 +52,7 @@ sudo debootstrap \
 # -----------------------------
 # 2. Configure APT repositories
 # -----------------------------
-echo "[2/19] Configure APT repositories"
+echo "[2/20] Configure APT repositories"
 cat <<EOF | sudo tee "$ROOTFS/etc/apt/sources.list"
 deb $MIRROR $DISTRO main restricted universe multiverse
 deb $MIRROR $DISTRO-security main restricted universe multiverse
@@ -64,7 +64,7 @@ sudo chroot "$ROOTFS" apt update
 # -----------------------------
 # 3. Mount virtual filesystems
 # -----------------------------
-echo "[3/19] Mount system directories"
+echo "[3/20] Mount system directories"
 sudo mount --bind /dev "$ROOTFS/dev"
 sudo mount --bind /dev/pts "$ROOTFS/dev/pts"
 sudo mount --bind /proc "$ROOTFS/proc"
@@ -73,7 +73,7 @@ sudo mount --bind /sys "$ROOTFS/sys"
 trap 'sudo umount -lf "$ROOTFS/dev/pts" "$ROOTFS/dev" "$ROOTFS/proc" "$ROOTFS/sys" 2>/dev/null || true' EXIT
 
 # Configure debconf for non-interactive installation (temporary, for build only)
-echo "[4/19] Configure debconf for non-interactive mode (build-time only)"
+echo "[4/20] Configure debconf for non-interactive mode (build-time only)"
 echo 'debconf debconf/frontend select Noninteractive' | sudo chroot "$ROOTFS" debconf-set-selections
 echo 'console-setup console-setup/charmap47 select UTF-8' | sudo chroot "$ROOTFS" debconf-set-selections
 echo 'console-setup console-setup/codeset47 select Lat15' | sudo chroot "$ROOTFS" debconf-set-selections
@@ -86,7 +86,7 @@ sudo chroot "$ROOTFS" apt clean || true
 # -----------------------------
 # 5. Install offline packages
 # -----------------------------
-echo "[5/19] Install offline packages"
+echo "[5/20] Install offline packages"
 sudo chroot "$ROOTFS" sh -c 'echo "APT::Keep-Downloaded-Packages \"true\";" > /etc/apt/apt.conf.d/99-keep-debs'
 OFFLINE_PKGS=$(grep -Ev '^\s*#|^\s*$' iso/config/profiles/offline.packages)
 sudo chroot "$ROOTFS" apt-get install -y $OFFLINE_PKGS
@@ -95,7 +95,7 @@ sudo chroot "$ROOTFS" rm -f /etc/apt/apt.conf.d/99-keep-debs
 # -----------------------------
 # 6. Create APT repository
 # -----------------------------
-echo "[6/19] Create local APT repository"
+echo "[6/20] Create local APT repository"
 mkdir -p iso/image/pool/main
 sudo cp $ROOTFS/var/cache/apt/archives/*.deb iso/image/pool/main/
 
@@ -113,12 +113,7 @@ gpg --batch --passphrase '' --quick-generate-key \
   "Tejas Linux ISO <tejas.linux@vaibhavpandey.com>" \
   rsa2048 sign 0
 
-# Export public key and add to rootfs
-KEY_ID=$(gpg --batch --list-keys --with-colons "Tejas Linux ISO" | grep "^pub" | cut -d: -f5)
-mkdir -p $ROOTFS/etc/apt/trusted.gpg.d
-gpg --batch --export "$KEY_ID" > $ROOTFS/etc/apt/trusted.gpg.d/tejas-iso.gpg
-
-# Sign the release
+# Generate Release file
 apt-ftparchive \
   -o APT::FTPArchive::Release::Origin="Tejas Linux" \
   -o APT::FTPArchive::Release::Label="Tejas Linux" \
@@ -126,16 +121,26 @@ apt-ftparchive \
   -o APT::FTPArchive::Release::Codename="$DISTRO" \
   -o APT::FTPArchive::Release::Components="main" \
   -o APT::FTPArchive::Release::Architectures="amd64" \
-  release . \
-  | gpg --batch --yes --clearsign \
-  -o dists/$DISTRO/InRelease
+  release . > dists/$DISTRO/Release
+
+# Detached signature (Release.gpg)
+gpg --batch --yes \
+  -abs \
+  -o dists/$DISTRO/Release.gpg \
+  dists/$DISTRO/Release
+
+# Inline signature (InRelease)
+gpg --batch --yes \
+  --clearsign \
+  -o dists/$DISTRO/InRelease \
+  dists/$DISTRO/Release
 
 cd "$PRWD"
 
 # -----------------------------
 # 7. Create apt-cdrom metadata
 # -----------------------------
-echo "[7/19] Create CD-ROM metadata for apt-cdrom"
+echo "[7/20] Create CD-ROM metadata for apt-cdrom"
 mkdir -p iso/image/.disk
 echo "Tejas Linux $VERSION ($PROFILE edition)" > iso/image/.disk/info
 echo "main" > iso/image/.disk/base_components
@@ -144,27 +149,27 @@ echo "install" > iso/image/.disk/cd_type
 # -----------------------------
 # 8. Install base packages
 # -----------------------------
-echo "[8/19] Install base packages"
+echo "[8/20] Install base packages"
 BASE_PKGS=$(grep -Ev '^\s*#|^\s*$' iso/config/profiles/base.packages)
 sudo chroot "$ROOTFS" apt-get install -y $BASE_PKGS
 
 # -----------------------------
 # 9. Apply rootfs overlay
 # -----------------------------
-echo "[9/19] Copy rootfs overlay"
+echo "[9/20] Copy rootfs overlay"
 sudo rsync -a iso/config/rootfs/ "$ROOTFS/"
 
 # -----------------------------
 # 10. Install profile packages
 # -----------------------------
-echo "[10/19] Install $PROFILE packages"
+echo "[10/20] Install $PROFILE packages"
 PROFILE_PKGS=$(grep -Ev '^\s*#|^\s*$' "iso/config/profiles/$PROFILE.packages")
 sudo chroot "$ROOTFS" apt-get install -y $PROFILE_PKGS
 
 # -----------------------------
 # 11. Run hooks
 # -----------------------------
-echo "[11/19] Run chroot hooks"
+echo "[11/20] Run chroot hooks"
 echo "$PROFILE" | sudo tee "$ROOTFS/etc/tejas-profile"
 
 for hook in iso/config/hooks/*.sh; do
@@ -176,16 +181,25 @@ done
 # -----------------------------
 # 12. Reset debconf settings
 # -----------------------------
-echo "[12/19] Clearing build-time debconf settings"
+echo "[12/20] Clearing build-time debconf settings"
 # Remove debconf cache - it will be recreated fresh when packages need it
 # This ensures no build-time debconf settings persist to live/installed system
 sudo rm -rf "$ROOTFS/var/cache/debconf" 2>/dev/null || true
 sudo mkdir -p "$ROOTFS/var/cache/debconf" 2>/dev/null || true
 
 # -----------------------------
-# 13. Fix internet connectivity
+# 13. Export GPG key
 # -----------------------------
-echo "[13/19] Configure live networking"
+echo "[13/20] Export key to rootfs"
+KEY_ID=$(gpg --batch --list-keys --with-colons "Tejas Linux ISO" | grep "^pub" | cut -d: -f5)
+sudo mkdir -p "$ROOTFS/etc/apt/trusted.gpg.d"
+gpg --batch --export "$KEY_ID" | sudo tee "$ROOTFS/etc/apt/trusted.gpg.d/tejas-iso.gpg" > /dev/null
+sudo chmod 644 "$ROOTFS/etc/apt/trusted.gpg.d/tejas-iso.gpg"
+
+# -----------------------------
+# 14. Fix internet connectivity
+# -----------------------------
+echo "[14/20] Configure live networking"
 sudo chroot "$ROOTFS" mkdir -p /etc/netplan
 sudo chroot "$ROOTFS" tee /etc/netplan/01-network-manager.yaml >/dev/null <<'EOF'
 network:
@@ -198,17 +212,17 @@ sudo chroot "$ROOTFS" systemctl mask systemd-networkd
 sudo chroot "$ROOTFS" systemctl enable NetworkManager systemd-resolved
 
 # -----------------------------
-# 14. Generate filesystem manifest
+# 15. Generate filesystem manifest
 # -----------------------------
-echo "[14/19] Generate filesystem manifest"
+echo "[15/20] Generate filesystem manifest"
 sudo chroot "$ROOTFS" dpkg-query -W \
   --showformat='${Package} ${Version}\n' \
   | sudo tee "$IMAGE/casper/filesystem.manifest"
 
 # -----------------------------
-# 15. Copy kernel and initrd
+# 16. Copy kernel and initrd
 # -----------------------------
-echo "[15/19] Copy kernel and initrd"
+echo "[16/20] Copy kernel and initrd"
 KERNEL=$(ls "$ROOTFS"/boot/vmlinuz-* | sort | tail -1)
 INITRD=$(ls "$ROOTFS"/boot/initrd.img-* | sort | tail -1)
 sudo cp "$KERNEL" "$IMAGE/casper/vmlinuz"
@@ -220,18 +234,18 @@ sudo chroot "$ROOTFS" apt clean || true
 sudo chroot "$ROOTFS" rm -rf /var/lib/apt/lists/* || true
 
 # -----------------------------
-# 16. Unmount virtual filesystems
+# 17. Unmount virtual filesystems
 # -----------------------------
-echo "[16/19] Unmount virtual filesystems"
+echo "[17/20] Unmount virtual filesystems"
 sudo umount -lf "$ROOTFS/dev/pts" || true
 sudo umount -lf "$ROOTFS/dev" || true
 sudo umount -lf "$ROOTFS/proc" || true
 sudo umount -lf "$ROOTFS/sys" || true
 
 # -----------------------------
-# 17. Create squashfs
+# 18. Create squashfs
 # -----------------------------
-echo "[17/19] Create squashfs"
+echo "[18/20] Create squashfs"
 sudo mksquashfs \
   "$ROOTFS" \
   "$IMAGE/casper/filesystem.squashfs" \
@@ -239,9 +253,9 @@ sudo mksquashfs \
   -comp zstd
 
 # -----------------------------
-# 18. Install Secure Boot EFI binaries
+# 19. Install Secure Boot EFI binaries
 # -----------------------------
-echo "[18/19] Install Secure Boot EFI binaries"
+echo "[19/20] Install Secure Boot EFI binaries"
 
 # Microsoft-signed shim
 sudo cp /usr/lib/shim/shimx64.efi.signed \
@@ -257,9 +271,9 @@ if [ -f /usr/lib/shim/mmx64.efi ]; then
 fi
 
 # -----------------------------
-# 19. Create ISO (BIOS + UEFI)
+# 20. Create ISO (BIOS + UEFI)
 # -----------------------------
-echo "[19/19] Create ISO"
+echo "[20/20] Create ISO"
 mkdir -p "$OUT"
 grub-mkrescue \
   -o "$OUT/tejas-linux-$VERSION-$PROFILE-amd64.iso" \
