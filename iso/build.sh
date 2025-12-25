@@ -4,8 +4,8 @@ set -euo pipefail
 # -----------------------------
 # Configuration
 # -----------------------------
-DISTRO=noble
-ARCH=amd64
+DISTRO=${DISTRO:-noble}
+ARCH=${ARCH:-amd64}
 MIRROR=http://archive.ubuntu.com/ubuntu
 VERSION=$(date +%Y.%m.%d)
 
