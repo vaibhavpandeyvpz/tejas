@@ -4,5 +4,7 @@ git
 pkg-config
 
 # Userland apps
-firefox
-
+code
+gimp
+blender
+sublime-text

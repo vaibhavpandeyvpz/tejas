@@ -23,12 +23,3 @@ curl
 gpg
 snapd
 wget
-
-# Userland apps
-catfish
-libreoffice
-orage
-ristretto
-sylpheed
-vlc
-xfce4-terminal

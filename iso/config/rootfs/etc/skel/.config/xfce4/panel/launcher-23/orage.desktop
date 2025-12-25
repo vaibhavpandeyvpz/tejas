@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Name=Orage Calendar
+Comment=Desktop calendar
+Exec=orage %F
+Icon=org.xfce.orage
+StartupNotify=true
+MimeType=text/calendar;
+Terminal=false
+Type=Application
+Categories=X-XFCE;Office;Calendar;GTK;
+GenericName=Calendar
+X-XFCE-Source=file:///usr/share/applications/org.xfce.orage.desktop

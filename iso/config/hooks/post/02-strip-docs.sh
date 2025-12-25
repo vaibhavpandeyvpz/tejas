@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+echo "[strip-docs] Stripping unnecessary documentation"
+
 PROFILE=$(cat /etc/tejas-profile 2>/dev/null || echo user)
 
 if [ "$PROFILE" = "user" ]; then

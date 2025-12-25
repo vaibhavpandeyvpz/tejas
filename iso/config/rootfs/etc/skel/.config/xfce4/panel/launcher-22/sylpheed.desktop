@@ -1,0 +1,15 @@
+[Desktop Entry]
+Version=1.5
+Name=Sylpheed
+GenericName=Mail Client
+StartupWMClass=Sylpheed
+StartupNotify=true
+Comment=E-Mail client
+Exec=sylpheed %u
+Icon=sylpheed
+MimeType=message/rfc822;x-scheme-handler/mailto;
+Terminal=false
+Type=Application
+Categories=GTK;Network;Email;News;
+Keywords=lightweight;user-friendly;keyboard-oriented;mh;imap;pop3;nntp;japanese;plugins;gpg;
+X-XFCE-Source=file:///usr/share/applications/sylpheed.desktop

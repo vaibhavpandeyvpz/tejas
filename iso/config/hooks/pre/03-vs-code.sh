@@ -1,14 +1,7 @@
 #!/bin/bash
 set -e
 
-PROFILE=$(cat /etc/tejas-profile 2>/dev/null || echo user)
-
-# Only install for Pro edition
-if [ "$PROFILE" != "pro" ]; then
-  exit 0
-fi
-
-echo "[vscode] Installing Visual Studio Code (stable)"
+echo "[vs-code] Setting up Visual Studio Code (stable)"
 
 # Create keyrings directory
 install -d -m 0755 /usr/share/keyrings
@@ -30,6 +23,5 @@ Architectures: amd64
 Signed-By: /usr/share/keyrings/microsoft.gpg
 EOF
 
-# Update and install VS Code
+# Update APT repositories
 apt update
-apt install -y code

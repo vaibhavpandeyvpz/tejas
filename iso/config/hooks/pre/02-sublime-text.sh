@@ -1,14 +1,7 @@
 #!/bin/bash
 set -e
 
-PROFILE=$(cat /etc/tejas-profile 2>/dev/null || echo user)
-
-# Only install for Pro edition
-if [ "$PROFILE" != "pro" ]; then
-  exit 0
-fi
-
-echo "[sublime] Installing Sublime Text (stable channel)"
+echo "[sublime-text] Setting up Sublime Text (stable channel)"
 
 # Create keyrings directory if missing
 install -d -m 0755 /etc/apt/keyrings
@@ -26,6 +19,5 @@ Components:
 Signed-By: /etc/apt/keyrings/sublimehq-pub.asc
 EOF
 
-# Update and install
+# Update APT repositories
 apt update
-apt install -y sublime-text

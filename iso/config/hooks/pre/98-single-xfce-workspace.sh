@@ -1,14 +1,14 @@
 #!/bin/bash
 set -e
 
+echo "[single-xfce-workspace] Configuring single workspace (User edition)"
+
 PROFILE=$(cat /etc/tejas-profile 2>/dev/null || echo user)
 
 # Apply ONLY to User edition
 if [ "$PROFILE" != "user" ]; then
   exit 0
 fi
-
-echo "[xfce] Configuring single workspace (User edition)"
 
 XFCE_DIR="/etc/xdg/xfce4/xfconf/xfce-perchannel-xml"
 install -d -m 0755 "$XFCE_DIR"
