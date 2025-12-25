@@ -13,17 +13,17 @@
       <property name="size" type="uint" value="32" />
       <property name="plugin-ids" type="array">
         <value type="int" value="1" />
-        <value type="int" value="33" />
+        <value type="int" value="2" />
         <value type="int" value="3" />
         <value type="int" value="4" />
         <value type="int" value="5" />
         <value type="int" value="6" />
+        <value type="int" value="7" />
         <value type="int" value="8" />
+        <value type="int" value="9" />
         <value type="int" value="10" />
         <value type="int" value="11" />
         <value type="int" value="12" />
-        <value type="int" value="13" />
-        <value type="int" value="14" />
       </property>
       <property name="enable-struts" type="bool" value="true" />
       <property name="nrows" type="uint" value="1" />
@@ -46,30 +46,30 @@
       <property name="position-locked" type="bool" value="true" />
       <property name="size" type="uint" value="48" />
       <property name="plugin-ids" type="array">
-        <value type="int" value="17" />
-        <value type="int" value="31" />
-        <value type="int" value="18" />
-        <value type="int" value="22" />
-        <value type="int" value="26" />
-        <value type="int" value="30" />
         <value type="int" value="16" />
-        <value type="int" value="24" />
-        <value type="int" value="9" />
-        <value type="int" value="23" />
-        <value type="int" value="25" />
         <value type="int" value="29" />
-        <value type="int" value="28" />
-        <value type="int" value="19" />
+        <value type="int" value="17" />
         <value type="int" value="20" />
-        <value type="int" value="27" />
+        <value type="int" value="24" />
+        <value type="int" value="28" />
+        <value type="int" value="13" />
+        <value type="int" value="22" />
+        <value type="int" value="30" />
         <value type="int" value="21" />
-        <value type="int" value="41" />
-        <value type="int" value="42" />
-        <value type="int" value="43" />
-        <value type="int" value="44" />
-        <value type="int" value="40" />
-        <value type="int" value="39" />
-        <value type="int" value="7" />
+        <value type="int" value="23" />
+        <value type="int" value="27" />
+        <value type="int" value="26" />
+        <value type="int" value="18" />
+        <value type="int" value="19" />
+        <value type="int" value="25" />
+        <value type="int" value="14" />
+        <value type="int" value="33" />
+        <value type="int" value="34" />
+        <value type="int" value="35" />
+        <value type="int" value="36" />
+        <value type="int" value="32" />
+        <value type="int" value="31" />
+        <value type="int" value="15" />
       </property>
       <property name="leave-opacity" type="uint" value="100" />
       <property name="enter-opacity" type="uint" value="100" />
@@ -112,6 +112,15 @@
       <property name="show-command-settings" type="bool" value="false" />
       <property name="show-command-shutdown" type="bool" value="true" />
     </property>
+    <property name="plugin-2" type="string" value="appmenu">
+      <property name="plugins" type="empty">
+        <property name="plugin-2" type="empty">
+          <property name="compact-mode" type="bool" value="false" />
+          <property name="bold-application-name" type="bool" value="false" />
+          <property name="expand" type="bool" value="false" />
+        </property>
+      </property>
+    </property>
     <property name="plugin-3" type="string" value="separator">
       <property name="expand" type="bool" value="true" />
       <property name="style" type="uint" value="0" />
@@ -139,16 +148,16 @@
         <value type="string" value="nm-applet" />
       </property>
     </property>
-    <property name="plugin-8" type="string" value="pulseaudio">
+    <property name="plugin-7" type="string" value="pulseaudio">
       <property name="enable-keyboard-shortcuts" type="bool" value="true" />
       <property name="show-notifications" type="bool" value="true" />
       <property name="known-players" type="string" value="spotify;vlc" />
     </property>
-    <property name="plugin-10" type="string" value="notification-plugin" />
-    <property name="plugin-11" type="string" value="separator">
+    <property name="plugin-8" type="string" value="notification-plugin" />
+    <property name="plugin-9" type="string" value="separator">
       <property name="style" type="uint" value="0" />
     </property>
-    <property name="plugin-12" type="string" value="clock">
+    <property name="plugin-10" type="string" value="clock">
       <property name="digital-layout" type="uint" value="0" />
       <property name="mode" type="uint" value="2" />
       <property name="show-seconds" type="bool" value="true" />
@@ -157,78 +166,78 @@
       <property name="digital-time-format" type="string" value="%I:%M %p" />
       <property name="digital-date-format" type="string" value="%B %d, %Y" />
     </property>
-    <property name="plugin-13" type="string" value="separator">
+    <property name="plugin-11" type="string" value="separator">
       <property name="style" type="uint" value="0" />
     </property>
-    <property name="plugin-14" type="string" value="actions" />
-    <property name="plugin-16" type="string" value="separator" />
-    <property name="plugin-21" type="string" value="separator" />
-    <property name="plugin-7" type="string" value="thunar-tpa" />
-    <property name="plugin-17" type="string" value="showdesktop" />
-    <property name="plugin-18" type="string" value="launcher">
+    <property name="plugin-12" type="string" value="actions" />
+    <property name="plugin-13" type="string" value="separator" />
+    <property name="plugin-14" type="string" value="separator" />
+    <property name="plugin-15" type="string" value="thunar-tpa" />
+    <property name="plugin-16" type="string" value="showdesktop" />
+    <property name="plugin-17" type="string" value="launcher">
       <property name="items" type="array">
         <value type="string" value="thunar.desktop" />
       </property>
       <property name="show-label" type="bool" value="false" />
     </property>
-    <property name="plugin-19" type="string" value="launcher">
+    <property name="plugin-18" type="string" value="launcher">
       <property name="items" type="array">
         <value type="string" value="google-chrome.desktop" />
       </property>
     </property>
-    <property name="plugin-20" type="string" value="launcher">
+    <property name="plugin-19" type="string" value="launcher">
       <property name="items" type="array">
         <value type="string" value="spotify.desktop" />
       </property>
     </property>
-    <property name="plugin-22" type="string" value="launcher">
+    <property name="plugin-20" type="string" value="launcher">
       <property name="items" type="array">
         <value type="string" value="app-finder.desktop" />
       </property>
     </property>
-    <property name="plugin-23" type="string" value="launcher">
+    <property name="plugin-21" type="string" value="launcher">
       <property name="items" type="array">
         <value type="string" value="mousepad.desktop" />
       </property>
     </property>
-    <property name="plugin-24" type="string" value="launcher">
+    <property name="plugin-22" type="string" value="launcher">
       <property name="items" type="array">
         <value type="string" value="sylpheed.desktop" />
       </property>
     </property>
-    <property name="plugin-25" type="string" value="launcher">
+    <property name="plugin-23" type="string" value="launcher">
       <property name="items" type="array">
         <value type="string" value="orage.desktop" />
       </property>
     </property>
-    <property name="plugin-26" type="string" value="launcher">
+    <property name="plugin-24" type="string" value="launcher">
       <property name="items" type="array">
         <value type="string" value="seahorse.desktop" />
       </property>
     </property>
-    <property name="plugin-27" type="string" value="launcher">
+    <property name="plugin-25" type="string" value="launcher">
       <property name="items" type="array">
         <value type="string" value="vlc.desktop" />
       </property>
     </property>
-    <property name="plugin-28" type="string" value="separator" />
-    <property name="plugin-29" type="string" value="launcher">
+    <property name="plugin-26" type="string" value="separator" />
+    <property name="plugin-27" type="string" value="launcher">
       <property name="items" type="array">
         <value type="string" value="qalculate.desktop" />
       </property>
     </property>
-    <property name="plugin-30" type="string" value="launcher">
+    <property name="plugin-28" type="string" value="launcher">
       <property name="items" type="array">
         <value type="string" value="settings.desktop" />
       </property>
     </property>
-    <property name="plugin-31" type="string" value="separator" />
-    <property name="plugin-9" type="string" value="launcher">
+    <property name="plugin-29" type="string" value="separator" />
+    <property name="plugin-30" type="string" value="launcher">
       <property name="items" type="array">
         <value type="string" value="libreoffice.desktop" />
       </property>
     </property>
-    <property name="plugin-39" type="string" value="tasklist">
+    <property name="plugin-31" type="string" value="tasklist">
       <property name="show-labels" type="bool" value="false" />
       <property name="flat-buttons" type="bool" value="true" />
       <property name="show-handle" type="bool" value="false" />
@@ -240,34 +249,25 @@
         value="false"
       />
     </property>
-    <property name="plugin-40" type="string" value="separator" />
-    <property name="plugin-41" type="string" value="launcher">
+    <property name="plugin-32" type="string" value="separator" />
+    <property name="plugin-33" type="string" value="launcher">
       <property name="items" type="array">
         <value type="string" value="sublime-text.desktop" />
       </property>
     </property>
-    <property name="plugin-42" type="string" value="launcher">
+    <property name="plugin-34" type="string" value="launcher">
       <property name="items" type="array">
         <value type="string" value="code.desktop" />
       </property>
     </property>
-    <property name="plugin-43" type="string" value="launcher">
+    <property name="plugin-35" type="string" value="launcher">
       <property name="items" type="array">
         <value type="string" value="gimp.desktop" />
       </property>
     </property>
-    <property name="plugin-44" type="string" value="launcher">
+    <property name="plugin-36" type="string" value="launcher">
       <property name="items" type="array">
         <value type="string" value="blender.desktop" />
-      </property>
-    </property>
-    <property name="plugin-33" type="string" value="appmenu">
-      <property name="plugins" type="empty">
-        <property name="plugin-33" type="empty">
-          <property name="compact-mode" type="bool" value="false" />
-          <property name="bold-application-name" type="bool" value="false" />
-          <property name="expand" type="bool" value="false" />
-        </property>
       </property>
     </property>
   </property>
