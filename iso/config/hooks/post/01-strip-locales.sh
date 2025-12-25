@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+echo "[strip-locales] Stripping unnecessary locales"
+
+# Generate locale.gen file
 cat > /etc/locale.gen <<EOF
 en_IN.UTF-8 UTF-8
 en_US.UTF-8 UTF-8
@@ -21,5 +24,6 @@ EOF
 locale-gen
 update-locale LANG=en_IN.UTF-8
 
+# Purge unnecessary locales
 apt purge -y \
   language-pack-* || true

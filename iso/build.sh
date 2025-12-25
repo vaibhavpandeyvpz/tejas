@@ -154,6 +154,9 @@ BASE_PKGS=$(grep -Ev '^\s*#|^\s*$' iso/config/profiles/base.packages)
 sudo chroot "$ROOTFS" apt-get install -y $BASE_PKGS
 sudo chroot "$ROOTFS" systemctl enable snapd
 
+# Create profile file for hooks to read
+echo "$PROFILE" | sudo tee "$ROOTFS/etc/tejas-profile" > /dev/null
+
 # -----------------------------
 # 9. Run hooks (pre-install)
 # -----------------------------

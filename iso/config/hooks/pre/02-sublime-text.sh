@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "[sublime] Setting up Sublime Text (stable channel)"
+echo "[sublime-text] Setting up Sublime Text (stable channel)"
 
 # Create keyrings directory if missing
 install -d -m 0755 /etc/apt/keyrings

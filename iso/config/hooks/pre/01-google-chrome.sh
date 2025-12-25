@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "[chrome] Setting up Google Chrome (stable)"
+echo "[google-chrome] Setting up Google Chrome (stable)"
 
 # Create keyrings directory if missing
 install -d -m 0755 /usr/share/keyrings

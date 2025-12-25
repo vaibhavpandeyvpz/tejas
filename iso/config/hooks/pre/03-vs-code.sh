@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "[vscode] Setting up Visual Studio Code (stable)"
+echo "[vs-code] Setting up Visual Studio Code (stable)"
 
 # Create keyrings directory
 install -d -m 0755 /usr/share/keyrings

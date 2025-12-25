@@ -1,10 +1,10 @@
 #!/bin/bash
 set -e
 
+echo "[live-user] Creating live session user"
+
 LIVE_USER=tejas
 LIVE_HOME="/home/$LIVE_USER"
-
-echo "[live-user] Creating live session user: $LIVE_USER"
 
 # Create user if it doesn't exist
 if ! id "$LIVE_USER" >/dev/null 2>&1; then
