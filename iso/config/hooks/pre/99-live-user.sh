@@ -2,6 +2,7 @@
 set -e
 
 LIVE_USER=tejas
+LIVE_HOME="/home/$LIVE_USER"
 
 echo "[live-user] Creating live session user: $LIVE_USER"
 
@@ -26,5 +27,10 @@ fi
 usermod -c "Tejas Linux" tejas
 
 # Ensure home permissions
-chown -R "$LIVE_USER:$LIVE_USER" "/home/$LIVE_USER"
-chmod 755 "/home/$LIVE_USER"
+chown -R "$LIVE_USER:$LIVE_USER" "$LIVE_HOME"
+chmod 755 "$LIVE_HOME"
+
+mkdir -p "$LIVE_HOME/.config"
+
+cp -r /etc/skel/.config/* "$LIVE_HOME/.config/"
+chown -R "$LIVE_USER:$LIVE_USER" "$LIVE_HOME/.config"
