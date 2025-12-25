@@ -1,0 +1,15 @@
+[Desktop Entry]
+Version=1.0
+Name=Qalculate!
+GenericName=Calculator
+Comment=Powerful and easy to use calculator
+TryExec=qalculate-gtk
+Exec=qalculate-gtk
+Icon=qalculate
+Terminal=false
+Type=Application
+StartupNotify=true
+StartupWMClass=qalculate-gtk
+Categories=GTK;Utility;Calculator;Science;Math;
+Keywords=calculation;arithmetic;scientific;financial;
+X-XFCE-Source=file:///usr/share/applications/qalculate-gtk.desktop
