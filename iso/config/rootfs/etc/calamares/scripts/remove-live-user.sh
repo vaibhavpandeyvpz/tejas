@@ -9,3 +9,6 @@ fi
 
 # Clean leftover groups
 getent group "$LIVE_USER" && groupdel "$LIVE_USER" || true
+
+# Remove autologin config
+rm -f /etc/lightdm/lightdm.conf.d/10-tejas-live.conf

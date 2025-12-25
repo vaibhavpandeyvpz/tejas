@@ -169,7 +169,7 @@ debootstrap → casper → GRUB (BIOS + UEFI) → xorriso
 - Predictable, debuggable builds
 - No fragile legacy tooling
 
-The build process is a **20-step deterministic pipeline** that's fully inspectable. See [`iso/build.sh`](iso/build.sh) for details.
+The build process is a **21-step deterministic pipeline** that's fully inspectable. See [`iso/build.sh`](iso/build.sh) for details.
 
 ---
 
