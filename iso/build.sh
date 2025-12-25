@@ -160,6 +160,11 @@ sudo chroot "$ROOTFS" systemctl enable snapd
 echo "[9/20] Copy rootfs overlay"
 sudo rsync -a iso/config/rootfs/ "$ROOTFS/"
 
+# Ensure Calamares scripts are executable
+if [ -f "$ROOTFS/etc/calamares/scripts/remove-live-user.sh" ]; then
+  sudo chmod +x "$ROOTFS/etc/calamares/scripts/remove-live-user.sh"
+fi
+
 # -----------------------------
 # 10. Install profile packages
 # -----------------------------
