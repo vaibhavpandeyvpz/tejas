@@ -18,3 +18,6 @@ Suites: apt/stable/
 Components:
 Signed-By: /etc/apt/keyrings/sublimehq-pub.asc
 EOF
+
+# Update APT repositories
+apt update

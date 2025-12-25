@@ -17,3 +17,6 @@ chmod 644 /etc/apt/trusted.gpg.d/spotify.gpg
 cat <<EOF > /etc/apt/sources.list.d/spotify.list
 deb https://repository.spotify.com stable non-free
 EOF
+
+# Update APT repositories
+apt update

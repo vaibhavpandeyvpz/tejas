@@ -22,3 +22,6 @@ Components: main
 Architectures: amd64
 Signed-By: /usr/share/keyrings/microsoft.gpg
 EOF
+
+# Update APT repositories
+apt update

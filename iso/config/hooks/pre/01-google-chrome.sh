@@ -17,3 +17,6 @@ chmod 644 /usr/share/keyrings/google-chrome.gpg
 cat <<EOF > /etc/apt/sources.list.d/google-chrome.list
 deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main
 EOF
+
+# Update APT repositories
+apt update
