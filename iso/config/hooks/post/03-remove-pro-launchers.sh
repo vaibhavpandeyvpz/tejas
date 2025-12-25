@@ -23,32 +23,32 @@ import sys
 xml_file = "/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-panel.xml"
 
 try:
-tree = ET.parse(xml_file)
-root = tree.getroot()
+  tree = ET.parse(xml_file)
+  root = tree.getroot()
 
-# Find panel-2 and remove plugin IDs 32, 33, 34, 35, 36 from plugin-ids array
-for panel in root.findall(".//property[@name='panel-2']"):
+  # Find panel-2 and remove plugin IDs 32, 33, 34, 35, 36 from plugin-ids array
+  for panel in root.findall(".//property[@name='panel-2']"):
     plugin_ids = panel.find(".//property[@name='plugin-ids']")
     if plugin_ids is not None:
-        for value in plugin_ids.findall("value"):
-            plugin_id = value.get("value")
-            if plugin_id in ["32", "33", "34", "35", "36"]:
-                plugin_ids.remove(value)
+      for value in plugin_ids.findall("value"):
+        plugin_id = value.get("value")
+        if plugin_id in ["32", "33", "34", "35", "36"]:
+          plugin_ids.remove(value)
 
-# Remove plugin definitions (plugin-32 through plugin-36)
-plugins = root.find(".//property[@name='plugins']")
-if plugins is not None:
+  # Remove plugin definitions (plugin-32 through plugin-36)
+  plugins = root.find(".//property[@name='plugins']")
+  if plugins is not None:
     for plugin_num in ["32", "33", "34", "35", "36"]:
-        plugin = plugins.find(f".//property[@name='plugin-{plugin_num}']")
-        if plugin is not None:
-            plugins.remove(plugin)
+      plugin = plugins.find(f".//property[@name='plugin-{plugin_num}']")
+      if plugin is not None:
+        plugins.remove(plugin)
 
-# Write back to file
-tree.write(xml_file, encoding="UTF-8", xml_declaration=True)
-print(f"Successfully removed pro launchers from {xml_file}")
+  # Write back to file
+  tree.write(xml_file, encoding="UTF-8", xml_declaration=True)
+  print(f"Successfully removed pro launchers from {xml_file}")
 except Exception as e:
-print(f"Error processing XML: {e}", file=sys.stderr)
-sys.exit(1)
+  print(f"Error processing XML: {e}", file=sys.stderr)
+  sys.exit(1)
 PYTHON_SCRIPT
 fi
 
