@@ -20,6 +20,8 @@
 
 Tejas Linux is a modern, lightweight Ubuntu-based distribution that prioritizes **transparency, security, and simplicity**. Built with a custom, fully auditable build pipeline (no `live-build`), it delivers a clean XFCE desktop experience with Secure Boot support out of the box.
 
+For a tiny, proof-of-concept ~25MB linux distro based on busybox, see [https://github.com/vaibhavpandeyvpz/tinux](https://github.com/vaibhavpandeyvpz/tinux).
+
 ### 🎯 Key Differentiators
 
 - 🔐 **Secure Boot by default** - Works without custom keys or enrollment
