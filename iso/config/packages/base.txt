@@ -1,6 +1,7 @@
 # Core
 casper
 lightdm
+lightdm-gtk-greeter
 linux-generic
 netplan.io
 network-manager
