@@ -14,7 +14,7 @@
 
 </div>
 
----
+![Screenshot](assets/screenshot.png)
 
 ## ✨ What is Tejas Linux?
 
