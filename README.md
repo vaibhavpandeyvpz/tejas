@@ -26,7 +26,6 @@ Tejas Linux is a modern, lightweight Ubuntu-based distribution that prioritizes 
 - 🏗️ **Transparent build system** - Custom pipeline using debootstrap, casper, GRUB, xorriso
 - 📦 **Offline installation** - Embedded APT repository for Secure Boot packages
 - 🚀 **Single ISO** - Supports UEFI, Secure Boot, and Legacy BIOS from one image
-- 🇮🇳 **Indian locale support** - Default Indian English with 10+ Indian languages
 - 🎨 **Two editions** - User (minimal) and Pro (developer tools)
 
 ---
@@ -139,7 +138,6 @@ qemu-system-x86_64 \
 - 🖥️ XFCE desktop environment
 - 🌐 NetworkManager for networking
 - 📦 Snap support enabled
-- 🎨 Indian locale default with multi-language support
 
 ### Security
 
