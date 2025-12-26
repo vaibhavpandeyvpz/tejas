@@ -1,6 +1,6 @@
-# 🐧 Tejas Linux
-
 <div align="center">
+
+# 🔥 Tejas Linux
 
 **A lightweight, secure Ubuntu-based distribution with a transparent build system**
 
