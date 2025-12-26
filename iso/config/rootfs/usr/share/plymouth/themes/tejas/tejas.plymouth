@@ -1,0 +1,11 @@
+[Plymouth Theme]
+Name=Tejas Text
+Description=Tejas Linux text boot theme
+ModuleName=ubuntu-text
+
+[ubuntu-text]
+title=Tejas Linux 24.04
+black=0x0b1020
+white=0xe6eaf2
+brown=0xf59e0b
+blue=0x3b82f6
