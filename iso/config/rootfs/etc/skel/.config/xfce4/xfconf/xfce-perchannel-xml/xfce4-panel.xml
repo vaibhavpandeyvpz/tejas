@@ -28,9 +28,9 @@
       <property name="enable-struts" type="bool" value="true" />
       <property name="nrows" type="uint" value="1" />
       <property name="length-adjust" type="bool" value="true" />
-      <property name="background-style" type="uint" value="1" />
       <property name="leave-opacity" type="uint" value="100" />
       <property name="enter-opacity" type="uint" value="100" />
+      <property name="background-style" type="uint" value="1" />
       <property name="background-rgba" type="array">
         <value type="double" value="0.15" />
         <value type="double" value="0.15" />
@@ -73,6 +73,7 @@
       </property>
       <property name="leave-opacity" type="uint" value="100" />
       <property name="enter-opacity" type="uint" value="100" />
+      <property name="background-style" type="uint" value="1" />
       <property name="background-rgba" type="array">
         <value type="double" value="0.15" />
         <value type="double" value="0.15" />
