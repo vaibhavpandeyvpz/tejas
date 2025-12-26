@@ -1,7 +1,9 @@
-# User edition is intentionally minimal
-
 # Build tools
 build-essential-
+cmake-
+git-
+meson-
+pkg-config-
 
 # Docs & manpages
 info-

@@ -26,19 +26,19 @@ try:
   tree = ET.parse(xml_file)
   root = tree.getroot()
 
-  # Find panel-2 and remove plugin IDs 32, 33, 34, 35, 36 from plugin-ids array
+  # Find panel-2 and remove plugin IDs 32, 33, 34, 35, 36, 37 from plugin-ids array
   for panel in root.findall(".//property[@name='panel-2']"):
     plugin_ids = panel.find(".//property[@name='plugin-ids']")
     if plugin_ids is not None:
       for value in plugin_ids.findall("value"):
         plugin_id = value.get("value")
-        if plugin_id in ["32", "33", "34", "35", "36"]:
+        if plugin_id in ["32", "33", "34", "35", "36", "37"]:
           plugin_ids.remove(value)
 
   # Remove plugin definitions (plugin-32 through plugin-36)
   plugins = root.find(".//property[@name='plugins']")
   if plugins is not None:
-    for plugin_num in ["32", "33", "34", "35", "36"]:
+    for plugin_num in ["32", "33", "34", "35", "36", "37"]:
       plugin = plugins.find(f".//property[@name='plugin-{plugin_num}']")
       if plugin is not None:
         plugins.remove(plugin)
@@ -58,4 +58,5 @@ if [ -d "$PANEL_DIR" ]; then
   rm -rf "$PANEL_DIR/launcher-34" 2>/dev/null || true
   rm -rf "$PANEL_DIR/launcher-35" 2>/dev/null || true
   rm -rf "$PANEL_DIR/launcher-36" 2>/dev/null || true
+  rm -rf "$PANEL_DIR/launcher-37" 2>/dev/null || true
 fi

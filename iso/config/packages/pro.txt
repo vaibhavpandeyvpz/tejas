@@ -1,8 +1,3 @@
-# System utils
-build-essential
-git
-pkg-config
-
 # Userland apps
 code
 gimp
