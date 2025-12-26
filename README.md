@@ -41,6 +41,51 @@ Download the latest ISO from the [Releases](https://github.com/vaibhavpandeyvpz/
 - 🧑 **User** - Minimal system for general users
 - 👨‍💻 **Pro** - Includes compilers, headers, and development tools
 
+### Included Software
+
+#### Both Editions
+
+**Desktop Environment:**
+- XFCE 4 desktop with custom Tejas branding
+- LightDM display manager with custom greeter
+
+**Web & Communication:**
+- Google Chrome (stable)
+- Sylpheed email client
+- Spotify client
+
+**Office & Productivity:**
+- LibreOffice suite
+- Mousepad text editor
+- Orage calendar
+- Qalculate! calculator
+
+**Media:**
+- VLC media player
+- Ristretto image viewer
+
+**System Tools:**
+- Catfish file search
+- Thunar file manager with archive support
+- Xarchiver archive manager
+- Seahorse password manager
+- Snap package manager
+- NetworkManager for networking
+
+**Development Tools:**
+- build-essential (compilers, headers)
+- CMake build system
+- Git version control
+- Meson build system
+- pkg-config
+
+#### Pro Edition Additional Software
+
+- **Visual Studio Code** - Full-featured code editor
+- **Sublime Text** - Advanced text editor
+- **GIMP** - Image manipulation program
+- **Blender** - 3D creation suite
+
 ### Verify Your Download
 
 All releases are GPG-signed and include SHA256 checksums.
