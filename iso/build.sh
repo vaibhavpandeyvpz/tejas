@@ -152,7 +152,6 @@ echo "install" > iso/image/.disk/cd_type
 echo "[8/22] Install base packages"
 BASE_PKGS=$(grep -Ev '^\s*#|^\s*$' iso/config/packages/base.txt)
 sudo chroot "$ROOTFS" apt-get install -y $BASE_PKGS
-sudo chroot "$ROOTFS" systemctl enable snapd
 
 # Create profile file for hooks to read
 echo "$PROFILE" | sudo tee "$ROOTFS/etc/tejas-profile" > /dev/null
@@ -185,6 +184,7 @@ fi
 echo "[11/22] Install common packages"
 COMMON_PKGS=$(grep -Ev '^\s*#|^\s*$' iso/config/packages/common.txt)
 sudo chroot "$ROOTFS" apt-get install -y $COMMON_PKGS
+sudo chroot "$ROOTFS" systemctl enable snapd
 
 # -----------------------------
 # 12. Install profile packages

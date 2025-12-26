@@ -1,7 +1,7 @@
 # Core
 casper
+locales
 lightdm
-lightdm-gtk-greeter
 linux-generic
 netplan.io
 network-manager
@@ -22,5 +22,4 @@ rsync
 apt-transport-https
 curl
 gpg
-snapd
 wget

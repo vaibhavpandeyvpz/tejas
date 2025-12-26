@@ -2,6 +2,7 @@
 catfish
 google-chrome-stable
 libreoffice
+lightdm-gtk-greeter
 mousepad
 orage
 qalculate-gtk
@@ -15,3 +16,6 @@ xarchiver
 xfce4-appmenu-plugin
 xfce4-terminal
 xfce4-whiskermenu-plugin
+
+# System utils
+snapd
