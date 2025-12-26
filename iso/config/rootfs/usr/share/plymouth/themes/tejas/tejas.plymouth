@@ -4,7 +4,7 @@ Description=Tejas Linux text boot theme
 ModuleName=ubuntu-text
 
 [ubuntu-text]
-title=Tejas Linux 24.04
+title=Tejas Linux
 black=0x0b1020
 white=0xe6eaf2
 brown=0xf59e0b
