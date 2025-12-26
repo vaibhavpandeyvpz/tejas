@@ -1,3 +1,10 @@
+# Build tools
+build-essential
+cmake
+git
+meson
+pkg-config
+
 # Userland apps
 catfish
 google-chrome-stable
