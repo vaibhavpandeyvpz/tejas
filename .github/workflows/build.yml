@@ -6,14 +6,10 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
-  release:
-    types: [created]
 
 jobs:
   build:
     runs-on: ubuntu-22.04
-    permissions:
-      contents: write
     strategy:
       fail-fast: false
       matrix:
@@ -32,16 +28,9 @@ jobs:
       - name: Generate build version
         id: version
         run: |
-          if [ "${{ github.event_name }}" = "release" ]; then
-            # Use release tag name (remove 'v' prefix if present)
-            VERSION="${{ github.event.release.tag_name }}"
-            VERSION="${VERSION#v}"
-          else
-            # Use date and commit SHA for regular builds
-            DATE=$(date +%Y.%m.%d)
-            SHORT_SHA=$(git rev-parse --short HEAD)
-            VERSION="${DATE}-${SHORT_SHA}"
-          fi
+          DATE=$(date +%Y.%m.%d)
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          VERSION="${DATE}-${SHORT_SHA}"
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       # ----------------------------
@@ -121,17 +110,3 @@ jobs:
         with:
           name: tejas-linux-${{ matrix.profile }}
           path: dist/*
-
-      # ----------------------------
-      # Attach to release (if triggered by release)
-      # ----------------------------
-      - name: Attach ISO to release
-        if: github.event_name == 'release'
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            dist/*.iso
-            dist/*.sha256
-            dist/*.sig
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
