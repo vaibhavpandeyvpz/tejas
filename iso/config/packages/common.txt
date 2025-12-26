@@ -2,7 +2,6 @@
 catfish
 google-chrome-stable
 libreoffice
-lightdm-gtk-greeter
 mousepad
 orage
 qalculate-gtk
