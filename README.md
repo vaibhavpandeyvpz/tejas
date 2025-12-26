@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="assets/logo.png" alt="Tejas Linux Logo" width="200">
+
 # 🔥 Tejas Linux
 
 **A lightweight, secure Ubuntu-based distribution with a transparent build system**
