@@ -88,7 +88,7 @@ sudo chroot "$ROOTFS" apt clean || true
 # -----------------------------
 echo "[5/22] Install offline packages"
 sudo chroot "$ROOTFS" sh -c 'echo "APT::Keep-Downloaded-Packages \"true\";" > /etc/apt/apt.conf.d/99-keep-debs'
-OFFLINE_PKGS=$(grep -Ev '^\s*#|^\s*$' iso/config/profiles/offline.packages)
+OFFLINE_PKGS=$(grep -Ev '^\s*#|^\s*$' iso/config/packages/offline.txt)
 sudo chroot "$ROOTFS" apt-get install -y $OFFLINE_PKGS
 sudo chroot "$ROOTFS" rm -f /etc/apt/apt.conf.d/99-keep-debs
 
@@ -150,9 +150,8 @@ echo "install" > iso/image/.disk/cd_type
 # 8. Install base packages
 # -----------------------------
 echo "[8/22] Install base packages"
-BASE_PKGS=$(grep -Ev '^\s*#|^\s*$' iso/config/profiles/base.packages)
+BASE_PKGS=$(grep -Ev '^\s*#|^\s*$' iso/config/packages/base.txt)
 sudo chroot "$ROOTFS" apt-get install -y $BASE_PKGS
-sudo chroot "$ROOTFS" systemctl enable snapd
 
 # Create profile file for hooks to read
 echo "$PROFILE" | sudo tee "$ROOTFS/etc/tejas-profile" > /dev/null
@@ -183,14 +182,15 @@ fi
 # 11. Install common packages
 # -----------------------------
 echo "[11/22] Install common packages"
-COMMON_PKGS=$(grep -Ev '^\s*#|^\s*$' iso/config/profiles/common.packages)
+COMMON_PKGS=$(grep -Ev '^\s*#|^\s*$' iso/config/packages/common.txt)
 sudo chroot "$ROOTFS" apt-get install -y $COMMON_PKGS
+sudo chroot "$ROOTFS" systemctl enable snapd
 
 # -----------------------------
 # 12. Install profile packages
 # -----------------------------
 echo "[12/22] Install $PROFILE packages"
-PROFILE_PKGS=$(grep -Ev '^\s*#|^\s*$' "iso/config/profiles/$PROFILE.packages")
+PROFILE_PKGS=$(grep -Ev '^\s*#|^\s*$' "iso/config/packages/$PROFILE.txt")
 sudo chroot "$ROOTFS" apt-get install -y $PROFILE_PKGS
 
 # -----------------------------

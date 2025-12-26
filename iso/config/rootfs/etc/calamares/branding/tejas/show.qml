@@ -26,7 +26,7 @@ Presentation
     }
 
     Slide {
-        centeredText: "Secure by default\n\nUEFI Secure Boot is enabled using\nMicrosoft- and Canonical-signed components."
+        centeredText: "Secure by default\n\nUEFI Secure Boot is enabled using\nMicrosoft and Canonical signed components."
     }
 
     Slide {

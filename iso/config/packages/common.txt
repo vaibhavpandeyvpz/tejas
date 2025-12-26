@@ -15,3 +15,6 @@ xarchiver
 xfce4-appmenu-plugin
 xfce4-terminal
 xfce4-whiskermenu-plugin
+
+# System utils
+snapd
