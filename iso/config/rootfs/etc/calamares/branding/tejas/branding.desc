@@ -54,7 +54,7 @@ style:
    SidebarBackground: "#292F34"
    SidebarText: "#FFFFFF"
    SidebarTextCurrent: "#292F34"
-   SidebarBackgroundCurrent: "#D35400"
+   SidebarBackgroundCurrent: "#7D92C1"
 
 
 ### SLIDESHOW
