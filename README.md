@@ -46,25 +46,30 @@ Download the latest ISO from the [Releases](https://github.com/vaibhavpandeyvpz/
 #### Both Editions
 
 **Desktop Environment:**
+
 - XFCE 4 desktop with custom Tejas branding
 - LightDM display manager with custom greeter
 
 **Web & Communication:**
+
 - Google Chrome (stable)
 - Sylpheed email client
 - Spotify client
 
 **Office & Productivity:**
+
 - LibreOffice suite
 - Mousepad text editor
 - Orage calendar
 - Qalculate! calculator
 
 **Media:**
+
 - VLC media player
 - Ristretto image viewer
 
 **System Tools:**
+
 - Catfish file search
 - Thunar file manager with archive support
 - Xarchiver archive manager
@@ -73,6 +78,7 @@ Download the latest ISO from the [Releases](https://github.com/vaibhavpandeyvpz/
 - NetworkManager for networking
 
 **Development Tools:**
+
 - build-essential (compilers, headers)
 - CMake build system
 - Git version control
