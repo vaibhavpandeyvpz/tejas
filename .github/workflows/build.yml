@@ -16,7 +16,7 @@ jobs:
         profile: [user, pro]
 
     env:
-      DISTRO: noble
+      DISTRO: bookworm
 
     steps:
       - name: Checkout repository

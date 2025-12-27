@@ -1,26 +1,57 @@
 # Core
-casper
+apt-transport-https
+bind9-dnsutils
+busybox-static
+cpio
+cron
+curl
+dmidecode
+dosfstools
+ed
+file
+ftp
+gpg
+hdparm
+info
+libpam-systemd
+linux-image-amd64
+live-boot
+live-config
+live-tools
 locales
-lightdm
-lightdm-gtk-greeter
-linux-generic
+logrotate
+lshw
+lsof
+man-db
+media-types
+nftables
+parted
+pciutils
+psmisc
+rsync
+strace
+time
+usbutils
+wget
+xz-utils
+
+# Snap support
+snapd
+
+# Internet
 netplan.io
 network-manager
-network-manager-config-connectivity-ubuntu
+network-manager-config-connectivity-debian
+network-manager-gnome
 rfkill
 systemd-resolved
-ubuntu-standard
 wpasupplicant
+
+# Desktop environment
+lightdm
+lightdm-gtk-greeter
 xfce4
-
-# Installer
-calamares
-calamares-settings-ubuntu-common
-os-prober
-rsync
-
-# System utils
-apt-transport-https
-curl
-gpg
-wget
+xfce4-appmenu-plugin
+xfce4-terminal
+xfce4-whiskermenu-plugin
+thunar-archive-plugin

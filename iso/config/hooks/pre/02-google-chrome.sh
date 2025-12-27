@@ -19,4 +19,4 @@ deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.googl
 EOF
 
 # Update APT repositories
-apt update
+apt-get update
