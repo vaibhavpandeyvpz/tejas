@@ -12,6 +12,8 @@ ftp
 gpg
 hdparm
 info
+lightdm
+lightdm-gtk-greeter
 libpam-systemd
 linux-image-amd64
 live-boot
@@ -26,6 +28,7 @@ media-types
 netplan.io
 network-manager
 network-manager-config-connectivity-debian
+network-manager-gnome
 nftables
 parted
 pciutils
@@ -39,4 +42,5 @@ time
 usbutils
 wget
 wpasupplicant
+xfce4
 xz-utils
