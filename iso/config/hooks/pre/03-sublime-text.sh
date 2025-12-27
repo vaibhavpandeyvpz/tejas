@@ -20,4 +20,4 @@ Signed-By: /etc/apt/keyrings/sublimehq-pub.asc
 EOF
 
 # Update APT repositories
-apt update
+apt-get update

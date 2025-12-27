@@ -1,4 +1,4 @@
-FROM ubuntu:noble
+FROM debian:bookworm
 
 # Install all build dependencies
 RUN apt update && \

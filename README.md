@@ -4,7 +4,7 @@
 
 # 🔥 Tejas Linux
 
-**A lightweight, secure Ubuntu-based distribution with a transparent build system**
+**A lightweight, secure Debian-based distribution with a transparent build system**
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/vaibhavpandeyvpz/tejas/build.yml?branch=main&label=Build)](https://github.com/vaibhavpandeyvpz/tejas/actions)
 [![License](https://img.shields.io/badge/license-GPL--3.0-blue.svg)](LICENSE)
@@ -18,12 +18,12 @@
 
 ## ✨ What is Tejas Linux?
 
-Tejas Linux is a modern, lightweight Ubuntu-based distribution that prioritizes **transparency, security, and simplicity**. Built with a custom, fully auditable build pipeline (no `live-build`), it delivers a clean XFCE desktop experience with Secure Boot support out of the box.
+Tejas Linux is a modern, lightweight Debian-based distribution that prioritizes **transparency, security, and simplicity**. Built with a custom, fully auditable build pipeline (no `live-build`), it delivers a clean XFCE desktop experience with Secure Boot support out of the box.
 
 ### 🎯 Key Differentiators
 
 - 🔐 **Secure Boot by default** - Works without custom keys or enrollment
-- 🏗️ **Transparent build system** - Custom pipeline using debootstrap, casper, GRUB, xorriso
+- 🏗️ **Transparent build system** - Custom pipeline using debootstrap, live-boot, GRUB, xorriso
 - 📦 **Offline installation** - Embedded APT repository for Secure Boot packages
 - 🚀 **Single ISO** - Supports UEFI, Secure Boot, and Legacy BIOS from one image
 - 🎨 **Two editions** - User (minimal) and Pro (developer tools)
@@ -92,7 +92,7 @@ All releases are GPG-signed and include SHA256 checksums.
 
 ```bash
 # Import the signing key
-gpg --keyserver keyserver.ubuntu.com --recv-keys A3F982C55AD5DA0B
+gpg --keyserver keyserver.debian.org --recv-keys A3F982C55AD5DA0B
 
 # Verify the ISO
 gpg --verify tejas-linux.iso.sig tejas-linux.iso
@@ -131,7 +131,7 @@ Works on Linux, macOS, and Windows:
 
 **Windows users:** Use `.\docker-build.ps1 user` or `.\docker-build.ps1 pro`
 
-### Native Build (Ubuntu)
+### Native Build (Debian)
 
 ```bash
 # Install dependencies
@@ -186,7 +186,7 @@ qemu-system-x86_64 \
 
 ### Security
 
-- 🔐 Secure Boot chain: Microsoft-signed shim → Canonical-signed GRUB → Canonical-signed kernel
+- 🔐 Secure Boot chain: Microsoft-signed shim → Signed GRUB → Signed kernel
 - 🔑 GPG-signed releases
 - 📝 Transparent, auditable build process
 
@@ -204,7 +204,7 @@ qemu-system-x86_64 \
 Tejas Linux uses a **custom, transparent build pipeline** instead of `live-build`:
 
 ```
-debootstrap → casper → GRUB (BIOS + UEFI) → xorriso
+debootstrap → live-boot → GRUB (BIOS + UEFI) → xorriso
 ```
 
 **Why custom?**
@@ -246,7 +246,7 @@ Please open an issue before making large changes.
 Tejas Linux is licensed under the **GNU General Public License v3.0 (GPL-3.0)**.
 
 - All Tejas-specific scripts and configuration are GPL-3.0
-- Ubuntu packages remain under their respective upstream licenses
+- Debian packages remain under their respective upstream licenses
 - Tejas Linux is **not affiliated with or endorsed by Canonical**
 
 ---

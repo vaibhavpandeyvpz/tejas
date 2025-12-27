@@ -19,4 +19,4 @@ deb https://repository.spotify.com stable non-free
 EOF
 
 # Update APT repositories
-apt update
+apt-get update

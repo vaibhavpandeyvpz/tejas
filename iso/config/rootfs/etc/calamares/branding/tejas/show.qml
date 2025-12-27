@@ -18,7 +18,7 @@ Presentation
     }
 
     Slide {
-        centeredText: "Welcome to Tejas Linux\n\nA lightweight, secure, Ubuntu-based operating system."
+        centeredText: "Welcome to Tejas Linux\n\nA lightweight, secure, Debian-based operating system."
     }
 
     Slide {

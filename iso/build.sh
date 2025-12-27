@@ -4,9 +4,9 @@ set -euo pipefail
 # -----------------------------
 # Configuration
 # -----------------------------
-DISTRO=${DISTRO:-noble}
+DISTRO=${DISTRO:-bookworm}
 ARCH=${ARCH:-amd64}
-MIRROR=http://archive.ubuntu.com/ubuntu
+MIRROR=http://deb.debian.org/debian
 VERSION=$(date +%Y.%m.%d)
 
 PROFILE=${PROFILE:-user}
@@ -28,7 +28,7 @@ sudo chown root:root "$ROOTFS"
 
 # Clean APT cache to free space
 echo "[DEBUG] Cleaning APT cache"
-sudo apt clean || true
+sudo apt-get clean || true
 
 # Check available disk space (warn if less than 5GB)
 if command -v df >/dev/null 2>&1; then
@@ -54,12 +54,12 @@ sudo debootstrap \
 # -----------------------------
 echo "[2/22] Configure APT repositories"
 cat <<EOF | sudo tee "$ROOTFS/etc/apt/sources.list"
-deb $MIRROR $DISTRO main restricted universe multiverse
-deb $MIRROR $DISTRO-security main restricted universe multiverse
-deb $MIRROR $DISTRO-updates main restricted universe multiverse
+deb $MIRROR $DISTRO main contrib non-free-firmware
+deb $MIRROR $DISTRO-updates main contrib non-free-firmware
+deb http://security.debian.org/debian-security $DISTRO-security main contrib non-free-firmware
 EOF
 
-sudo chroot "$ROOTFS" apt update
+sudo chroot "$ROOTFS" apt-get update
 
 # -----------------------------
 # 3. Mount virtual filesystems
@@ -81,7 +81,7 @@ echo 'console-setup console-setup/fontsize-fb47 text 16' | sudo chroot "$ROOTFS"
 
 # Clean APT cache to free space
 echo "[DEBUG] Cleaning APT cache"
-sudo chroot "$ROOTFS" apt clean || true
+sudo chroot "$ROOTFS" apt-get clean || true
 
 # -----------------------------
 # 5. Install offline packages
@@ -241,9 +241,10 @@ sudo chroot "$ROOTFS" systemctl enable NetworkManager systemd-resolved
 # 17. Generate filesystem manifest
 # -----------------------------
 echo "[17/22] Generate filesystem manifest"
+mkdir -p "$IMAGE/live"
 sudo chroot "$ROOTFS" dpkg-query -W \
   --showformat='${Package} ${Version}\n' \
-  | sudo tee "$IMAGE/casper/filesystem.manifest"
+  | sudo tee "$IMAGE/live/filesystem.manifest"
 
 # -----------------------------
 # 18. Copy kernel and initrd
@@ -251,13 +252,13 @@ sudo chroot "$ROOTFS" dpkg-query -W \
 echo "[18/22] Copy kernel and initrd"
 KERNEL=$(ls "$ROOTFS"/boot/vmlinuz-* | sort | tail -1)
 INITRD=$(ls "$ROOTFS"/boot/initrd.img-* | sort | tail -1)
-sudo cp "$KERNEL" "$IMAGE/casper/vmlinuz"
-sudo cp "$INITRD" "$IMAGE/casper/initrd"
+sudo cp "$KERNEL" "$IMAGE/live/vmlinuz"
+sudo cp "$INITRD" "$IMAGE/live/initrd"
 
 # Clean APT cache to free space
 echo "[DEBUG] Cleaning APT cache"
-sudo chroot "$ROOTFS" apt clean || true
-sudo chroot "$ROOTFS" rm -rf /var/lib/apt/lists/* || true
+sudo chroot "$ROOTFS" apt-get clean || true
+sudo chroot "$ROOTFS" rm -r /var/lib/apt/lists/* || true
 
 # -----------------------------
 # 19. Unmount virtual filesystems
@@ -274,7 +275,7 @@ sudo umount -lf "$ROOTFS/sys" || true
 echo "[20/22] Create squashfs"
 sudo mksquashfs \
   "$ROOTFS" \
-  "$IMAGE/casper/filesystem.squashfs" \
+  "$IMAGE/live/filesystem.squashfs" \
   -e boot \
   -comp zstd
 
@@ -287,7 +288,7 @@ echo "[21/22] Install Secure Boot EFI binaries"
 sudo cp /usr/lib/shim/shimx64.efi.signed \
   "$IMAGE/EFI/BOOT/BOOTX64.EFI"
 
-# Canonical-signed GRUB
+# Signed GRUB (Debian uses Canonical-signed GRUB)
 sudo cp /usr/lib/grub/x86_64-efi-signed/grubx64.efi.signed \
   "$IMAGE/EFI/BOOT/grubx64.efi"
 

@@ -44,10 +44,10 @@ The public key is available in this repository:
 tejas-linux-public.key
 ```
 
-Or from Ubuntu keyservers:
+Or from Debian keyservers:
 
 ```bash
-gpg --keyserver keyserver.ubuntu.com --recv-keys A3F982C55AD5DA0B
+gpg --keyserver keyserver.debian.org --recv-keys A3F982C55AD5DA0B
 ```
 
 To encrypt your report:
@@ -96,15 +96,15 @@ Refer to `README.md` for detailed verification instructions.
 
 ## 🧩 Secure Boot & Third-Party Software
 
-- Tejas Linux uses **Ubuntu’s Secure Boot chain**
+- Tejas Linux uses **Debian's Secure Boot chain**
   - Microsoft-signed shim
-  - Canonical-signed GRUB
-  - Canonical-signed kernel
+  - Debian-signed GRUB
+  - Debian-signed kernel
 
 - Proprietary or DKMS-based drivers (e.g. NVIDIA) may require **MOK enrollment**
   - This behavior is expected and documented
 
-Security issues related solely to **upstream Ubuntu packages** should generally be reported upstream as well.
+Security issues related solely to **upstream Debian packages** should generally be reported upstream as well.
 
 ---
 
@@ -127,7 +127,7 @@ We ask that reporters:
 
 - Avoid public disclosure until a fix is available
 - Give reasonable time for investigation and remediation
-- Coordinate disclosure if the issue affects upstream Ubuntu or third parties
+- Coordinate disclosure if the issue affects upstream Debian or third parties
 
 We are committed to **responsible, transparent handling** of security issues.
 

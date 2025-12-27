@@ -1,9 +1,18 @@
+# System
+lightdm
+lightdm-gtk-greeter
+xfce4
+
 # Build tools
 build-essential
 cmake
 git
 meson
 pkg-config
+
+# Installer
+calamares
+os-prober
 
 # Userland apps
 catfish
@@ -22,6 +31,3 @@ xarchiver
 xfce4-appmenu-plugin
 xfce4-terminal
 xfce4-whiskermenu-plugin
-
-# System utils
-snapd
